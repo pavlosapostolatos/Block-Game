@@ -9,8 +9,11 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "K2Node_SpawnActor.h"
 #include "Engine/LocalPlayer.h"
-
+#include "Engine/StaticMeshActor.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetSystemLibrary.h"
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 //////////////////////////////////////////////////////////////////////////
@@ -20,10 +23,10 @@ ABlockGameCharacter::ABlockGameCharacter()
 {
 	// Character doesnt have a rifle at start
 	bHasRifle = false;
-	
+
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
-		
+
 	// Create a CameraComponent	
 	FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	FirstPersonCameraComponent->SetupAttachment(GetCapsuleComponent());
@@ -38,7 +41,6 @@ ABlockGameCharacter::ABlockGameCharacter()
 	Mesh1P->CastShadow = false;
 	//Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
-
 }
 
 void ABlockGameCharacter::BeginPlay()
@@ -49,12 +51,12 @@ void ABlockGameCharacter::BeginPlay()
 	// Add Input Mapping Context
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<
+			UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
-
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
@@ -76,7 +78,10 @@ void ABlockGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	}
 	else
 	{
-		UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input Component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
+		UE_LOG(LogTemplateCharacter, Error,
+		       TEXT(
+			       "'%s' Failed to find an Enhanced Input Component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."
+		       ), *GetNameSafe(this));
 	}
 }
 
@@ -115,4 +120,42 @@ void ABlockGameCharacter::SetHasRifle(bool bNewHasRifle)
 bool ABlockGameCharacter::GetHasRifle()
 {
 	return bHasRifle;
+}
+
+
+void ABlockGameCharacter::SpawnBox()
+{
+	APlayerCameraManager* cameraManager = UGameplayStatics::GetPlayerCameraManager(this, 0);
+	// FVector4d location = GetActorLocation();//the same??
+	// location.w
+	FVector forward = cameraManager->GetActorForwardVector();
+	FVector location = cameraManager->GetCameraLocation();
+	FVector end = location + forward * 50000;
+	FHitResult hit;
+	TArray<AActor*> ignore;
+	bool collided = UKismetSystemLibrary::LineTraceSingle(this, location, end, TraceTypeQuery1,
+	                                                     0, ignore, EDrawDebugTrace::Persistent, hit, true);
+
+	if(collided)
+	{
+		UKismetSystemLibrary::PrintString(this, hit.GetActor()->GetActorNameOrLabel());
+		FTransform SpawnTransform = UE::Math::TTransform(hit.ImpactPoint);//LOCATION works too
+		
+		AStaticMeshActor* cube = GetWorld()->SpawnActorDeferred<AStaticMeshActor>(AStaticMeshActor::StaticClass(), SpawnTransform, nullptr, nullptr,ESpawnActorCollisionHandlingMethod::Undefined);
+		if (cube)
+		{
+			// Set the static mesh component for the spawned actor
+			UStaticMeshComponent* StaticMeshComponent = cube->GetStaticMeshComponent();
+			StaticMeshComponent->SetMobility(EComponentMobility::Movable);
+			if (StaticMeshComponent)
+			{
+				if(!boxToSpawn)		// UStaticMesh* YourStaticMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Script/Engine.StaticMesh'/Game/Meshes/SM_Block.SM_Block'"));
+					UKismetSystemLibrary::PrintWarning("Box to spawn is not set");
+				StaticMeshComponent->SetStaticMesh(boxToSpawn);
+			}
+
+			// Finish spawning the actor
+			cube->FinishSpawning(SpawnTransform);
+		}
+	}
 }

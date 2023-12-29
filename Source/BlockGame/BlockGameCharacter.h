@@ -79,9 +79,15 @@ protected:
 
 public:
 	/** Returns Mesh1P subobject **/
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UStaticMesh* boxToSpawn;
+	
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
+	UFUNCTION(BlueprintCallable)
+	virtual void SpawnBox();
 };
 
