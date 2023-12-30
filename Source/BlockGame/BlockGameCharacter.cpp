@@ -75,6 +75,13 @@ void ABlockGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABlockGameCharacter::Look);
+
+
+		//Custom actions. To register I put IMC_PlayerControls to Character's Input->Default Mapping Context in the blueprint
+		EnhancedInputComponent->BindAction(BuildBlock, ETriggerEvent::Triggered, this, &ABlockGameCharacter::SpawnBox);//This works because i have set IMC_PlayerControls key to have a PRESSED trigger
+		//Another solution would be not to set that and use ETriggerEvent::Started
+		// EnhancedInputComponent->BindAction(DeleteBlock, ETriggerEvent::Triggered, this, &ABlockGameCharacter::Move);
+
 	}
 	else
 	{
@@ -123,7 +130,7 @@ bool ABlockGameCharacter::GetHasRifle()
 }
 
 
-void ABlockGameCharacter::SpawnBox()
+void ABlockGameCharacter::GetLineTraceFromCharacter(FHitResult& hit, bool& collided)//Could go in a lib file
 {
 	APlayerCameraManager* cameraManager = UGameplayStatics::GetPlayerCameraManager(this, 0);
 	// FVector4d location = GetActorLocation();//the same??
@@ -131,30 +138,49 @@ void ABlockGameCharacter::SpawnBox()
 	FVector forward = cameraManager->GetActorForwardVector();
 	FVector location = cameraManager->GetCameraLocation();
 	FVector end = location + forward * 50000;
-	FHitResult hit;
 	TArray<AActor*> ignore;
-	bool collided = UKismetSystemLibrary::LineTraceSingle(this, location, end, TraceTypeQuery1,
-	                                                     0, ignore, EDrawDebugTrace::Persistent, hit, true);
+	collided = UKismetSystemLibrary::LineTraceSingle(this, location, end, TraceTypeQuery1,
+	                                                 0, ignore, EDrawDebugTrace::Persistent, hit, true);
+}
 
-	if(collided)
+void ABlockGameCharacter::SpawnBox()
+{
+	FHitResult hit;
+	bool collided;
+	GetLineTraceFromCharacter(hit, collided);
+
+	if (collided)
 	{
 		UKismetSystemLibrary::PrintString(this, hit.GetActor()->GetActorNameOrLabel());
-		FTransform SpawnTransform = UE::Math::TTransform(hit.ImpactPoint);//LOCATION works too
-		
-		AStaticMeshActor* cube = GetWorld()->SpawnActorDeferred<AStaticMeshActor>(AStaticMeshActor::StaticClass(), SpawnTransform, nullptr, nullptr,ESpawnActorCollisionHandlingMethod::Undefined);
-		if (cube)
-		{
-			// Set the static mesh component for the spawned actor
-			UStaticMeshComponent* StaticMeshComponent = cube->GetStaticMeshComponent();
-			StaticMeshComponent->SetMobility(EComponentMobility::Movable);
-			if (StaticMeshComponent)
-			{
-				if(!boxToSpawn)		// UStaticMesh* YourStaticMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Script/Engine.StaticMesh'/Game/Meshes/SM_Block.SM_Block'"));
-					UKismetSystemLibrary::PrintWarning("Box to spawn is not set");
-				StaticMeshComponent->SetStaticMesh(boxToSpawn);
-			}
+		FTransform SpawnTransform = UE::Math::TTransform(hit.ImpactPoint); //LOCATION works too
 
-			// Finish spawning the actor
+		SpawnTransform.SetLocation(SpawnTransform.GetLocation().GridSnap(100));//snaps blocks together. kinda hacky. make sure the dimensions of the box you are spawning is 100 too
+
+		if (!BlueprintActorToSpawn)
+		{
+			AStaticMeshActor* cube = GetWorld()->SpawnActorDeferred<AStaticMeshActor>(
+				AStaticMeshActor::StaticClass(), SpawnTransform, nullptr, nullptr,
+				ESpawnActorCollisionHandlingMethod::Undefined);
+			if (cube)
+			{
+				// Set the static mesh component for the spawned actor
+				UStaticMeshComponent* StaticMeshComponent = cube->GetStaticMeshComponent();
+				StaticMeshComponent->SetMobility(EComponentMobility::Movable);
+				if (StaticMeshComponent)
+				{
+					if (!boxToSpawn)
+						// UStaticMesh* YourStaticMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Script/Engine.StaticMesh'/Game/Meshes/SM_Block.SM_Block'"));
+						UKismetSystemLibrary::PrintWarning("Box to spawn is not set");
+					StaticMeshComponent->SetStaticMesh(boxToSpawn);
+				}
+
+				// Finish spawning the actor
+				cube->FinishSpawning(SpawnTransform);
+			}
+		}
+		else
+		{
+			AActor* cube = GetWorld()->SpawnActor<AActor>(BlueprintActorToSpawn, SpawnTransform);
 			cube->FinishSpawning(SpawnTransform);
 		}
 	}

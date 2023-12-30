@@ -40,6 +40,17 @@ class ABlockGameCharacter : public ACharacter
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* MoveAction;
+
+	/** Look Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* LookAction;
+
+	/** Move Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* BuildBlock;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* DeleteBlock;
 	
 public:
 	ABlockGameCharacter();
@@ -48,11 +59,6 @@ protected:
 	virtual void BeginPlay();
 
 public:
-		
-	/** Look Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* LookAction;
-
 	/** Bool for AnimBP to switch to another animation set */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Weapon)
 	bool bHasRifle;
@@ -64,6 +70,7 @@ public:
 	/** Getter for the bool */
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	bool GetHasRifle();
+	void GetLineTraceFromCharacter(FHitResult& hit, bool& collided);
 
 protected:
 	/** Called for movement input */
@@ -82,6 +89,12 @@ public:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	UStaticMesh* boxToSpawn;
+	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UBlueprint* actorToSpawn;
+
+	UPROPERTY(EditAnywhere, Category = "Your Category")
+	TSubclassOf<class AActor> BlueprintActorToSpawn;
 	
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/
