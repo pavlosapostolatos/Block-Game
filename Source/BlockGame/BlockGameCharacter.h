@@ -93,8 +93,11 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	UBlueprint* actorToSpawn;
 
-	UPROPERTY(EditAnywhere, Category = "Your Category")
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	TSubclassOf<class AActor> BlueprintActorToSpawn;
+	//
+	// UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	// UClass* test; the correct way to do this shit
 	
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/
@@ -102,5 +105,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual void SpawnBox();
+
+	UFUNCTION(BlueprintCallable)
+	void DeleteBox();
 };
 

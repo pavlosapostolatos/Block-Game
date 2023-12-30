@@ -80,7 +80,7 @@ void ABlockGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		//Custom actions. To register I put IMC_PlayerControls to Character's Input->Default Mapping Context in the blueprint
 		EnhancedInputComponent->BindAction(BuildBlock, ETriggerEvent::Triggered, this, &ABlockGameCharacter::SpawnBox);//This works because i have set IMC_PlayerControls key to have a PRESSED trigger
 		//Another solution would be not to set that and use ETriggerEvent::Started
-		// EnhancedInputComponent->BindAction(DeleteBlock, ETriggerEvent::Triggered, this, &ABlockGameCharacter::Move);
+		EnhancedInputComponent->BindAction(DeleteBlock, ETriggerEvent::Triggered, this, &ABlockGameCharacter::DeleteBox);
 
 	}
 	else
@@ -183,5 +183,18 @@ void ABlockGameCharacter::SpawnBox()
 			AActor* cube = GetWorld()->SpawnActor<AActor>(BlueprintActorToSpawn, SpawnTransform);
 			cube->FinishSpawning(SpawnTransform);
 		}
+	}
+}
+
+void ABlockGameCharacter::DeleteBox()
+{
+	FHitResult hit;
+	bool collided;
+	GetLineTraceFromCharacter(hit, collided);
+	
+	if (collided && hit.GetActor()->GetClass() == BlueprintActorToSpawn )
+	{
+		UKismetSystemLibrary::PrintString(this, hit.GetActor()->GetActorNameOrLabel());
+		hit.GetActor()->Destroy();
 	}
 }
