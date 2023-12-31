@@ -205,6 +205,6 @@ void ABlockGameCharacter::DeleteBox()
 	if (collided && Cast<ABlockBox>(hit.GetActor()))
 	{
 		UKismetSystemLibrary::PrintString(this, hit.GetActor()->GetActorNameOrLabel());
-		hit.GetActor()->Destroy();
+		Cast<ABlockBox>(hit.GetActor())->DestroyBox();
 	}
 }
