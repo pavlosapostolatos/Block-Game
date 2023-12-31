@@ -96,8 +96,8 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	TSubclassOf<class AActor> BlueprintActorToSpawn;
 	//
-	// UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	// UClass* test; the correct way to do this shit
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UClass* test; //the correct way to do this shit
 	
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/

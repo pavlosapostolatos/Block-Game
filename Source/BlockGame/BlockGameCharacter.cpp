@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "BlockGameCharacter.h"
+
+#include "Public\BlockBox.h"
 #include "BlockGameProjectile.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
@@ -10,6 +12,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "K2Node_SpawnActor.h"
+#include "Components/TimelineComponent.h"
 #include "Engine/LocalPlayer.h"
 #include "Engine/StaticMeshActor.h"
 #include "Kismet/GameplayStatics.h"
@@ -78,10 +81,11 @@ void ABlockGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 
 
 		//Custom actions. To register I put IMC_PlayerControls to Character's Input->Default Mapping Context in the blueprint
-		EnhancedInputComponent->BindAction(BuildBlock, ETriggerEvent::Triggered, this, &ABlockGameCharacter::SpawnBox);//This works because i have set IMC_PlayerControls key to have a PRESSED trigger
+		EnhancedInputComponent->BindAction(BuildBlock, ETriggerEvent::Triggered, this, &ABlockGameCharacter::SpawnBox);
+		//This works because i have set IMC_PlayerControls key to have a PRESSED trigger
 		//Another solution would be not to set that and use ETriggerEvent::Started
-		EnhancedInputComponent->BindAction(DeleteBlock, ETriggerEvent::Triggered, this, &ABlockGameCharacter::DeleteBox);
-
+		EnhancedInputComponent->BindAction(DeleteBlock, ETriggerEvent::Triggered, this,
+		                                   &ABlockGameCharacter::DeleteBox);
 	}
 	else
 	{
@@ -130,7 +134,7 @@ bool ABlockGameCharacter::GetHasRifle()
 }
 
 
-void ABlockGameCharacter::GetLineTraceFromCharacter(FHitResult& hit, bool& collided)//Could go in a lib file
+void ABlockGameCharacter::GetLineTraceFromCharacter(FHitResult& hit, bool& collided) //Could go in a lib file
 {
 	APlayerCameraManager* cameraManager = UGameplayStatics::GetPlayerCameraManager(this, 0);
 	// FVector4d location = GetActorLocation();//the same??
@@ -154,7 +158,8 @@ void ABlockGameCharacter::SpawnBox()
 		UKismetSystemLibrary::PrintString(this, hit.GetActor()->GetActorNameOrLabel());
 		FTransform SpawnTransform = UE::Math::TTransform(hit.ImpactPoint); //LOCATION works too
 
-		SpawnTransform.SetLocation(SpawnTransform.GetLocation().GridSnap(100));//snaps blocks together. kinda hacky. make sure the dimensions of the box you are spawning is 100 too
+		SpawnTransform.SetLocation(SpawnTransform.GetLocation().GridSnap(100));
+		//snaps blocks together. kinda hacky. make sure the dimensions of the box you are spawning is 100 too
 
 		if (!BlueprintActorToSpawn)
 		{
@@ -191,8 +196,13 @@ void ABlockGameCharacter::DeleteBox()
 	FHitResult hit;
 	bool collided;
 	GetLineTraceFromCharacter(hit, collided);
-	
-	if (collided && hit.GetActor()->GetClass() == BlueprintActorToSpawn )
+
+	// if (collided && hit.GetActor()->GetClass() == BlueprintActorToSpawn )
+	// {
+	// 	UKismetSystemLibrary::PrintString(this, hit.GetActor()->GetActorNameOrLabel());
+	// 	hit.GetActor()->Destroy();
+	// }
+	if (collided && Cast<ABlockBox>(hit.GetActor()))
 	{
 		UKismetSystemLibrary::PrintString(this, hit.GetActor()->GetActorNameOrLabel());
 		hit.GetActor()->Destroy();
