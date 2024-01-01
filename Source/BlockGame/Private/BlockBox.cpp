@@ -24,7 +24,7 @@ void ABlockBox::BeginPlay()
 void ABlockBox::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	UpdateDestroyAmount(DeltaTime);
+	DestroyBox(DeltaTime);
 }
 
 void ABlockBox::DestroyBox()
@@ -33,7 +33,7 @@ void ABlockBox::DestroyBox()
 }
 
 
-void ABlockBox::UpdateDestroyAmount(float DeltaTime)
+void ABlockBox::DestroyBox(float DeltaTime)
 {
 	if (!destroyData.bLerping)
 	{
@@ -41,7 +41,6 @@ void ABlockBox::UpdateDestroyAmount(float DeltaTime)
 		destroyData.StartValue = 0.0f;
 		destroyData.EndValue = 1.0f;
 	}
-
 	if (destroyData.bLerping)
 	{
 		destroyData.LerpTimer += DeltaTime;
@@ -58,6 +57,7 @@ void ABlockBox::UpdateDestroyAmount(float DeltaTime)
 			float Alpha = FMath::Clamp(destroyData.LerpTimer / destroyData.LerpDuration, 0.0f, 1.0f);
 			destroyData.DestroyAmount = FMath::Lerp(destroyData.StartValue, destroyData.EndValue, Alpha);
 			UKismetSystemLibrary::PrintString(this, FString::SanitizeFloat(destroyData.DestroyAmount));
+			UpdateMaterialDestruction(destroyData.DestroyAmount);
 // Call function or perform action for update
 		}
 	}

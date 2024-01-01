@@ -6,35 +6,43 @@
 #include "GameFramework/Actor.h"
 #include "BlockBox.generated.h"
 
-
-struct DestroyData
-{
-	float DestroyAmount = 0.0f;
-	float LerpDuration = 3.0f; // Duration in seconds
-	float LerpTimer = 0.0f;
-	float StartValue = 0.0f;
-	float EndValue = 1.0f;
-	float bLerping = false;
-};
+struct DestroyData;
 
 UCLASS()
 class BLOCKGAME_API ABlockBox : public AActor
 {
 	GENERATED_BODY()
 	
-public:	
+	struct DestroyData
+	{
+		float DestroyAmount = 0.0f;
+		float LerpDuration = 3.0f; // Duration in seconds
+		float LerpTimer = 0.0f;
+		float StartValue = 0.0f;
+		float EndValue = 1.0f;
+		float bLerping = false;
+	};
+	DestroyData destroyData;
+	
+	void DestroyBox(float DeltaTime);
+
+public:
 	// Sets default values for this actor's properties
 	ABlockBox();
 
 protected:
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	DestroyData destroyData;
-public:	
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void UpdateMaterialDestruction(float destroyAmount);
+
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable)
 	void DestroyBox();
-	void UpdateDestroyAmount(float DeltaTime);
 };
+
