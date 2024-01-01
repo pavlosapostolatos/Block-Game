@@ -13,6 +13,12 @@ class BLOCKGAME_API ABlockBox : public AActor
 {
 	GENERATED_BODY()
 	
+	UPROPERTY(EditAnywhere, Category=Mesh)
+	UStaticMeshComponent* SM_Block;
+
+	UPROPERTY(EditAnywhere, Category=Mesh)
+	UMaterial* BlockMaterial;
+	
 	struct DestroyData
 	{
 		float DestroyAmount = 0.0f;
@@ -35,7 +41,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintCallable)
 	void UpdateMaterialDestruction(float destroyAmount);
 
 public:

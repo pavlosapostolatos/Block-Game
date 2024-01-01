@@ -10,14 +10,28 @@ ABlockBox::ABlockBox()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot"));
 
+	SM_Block = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SM_Block"));
+	SM_Block->SetupAttachment(RootComponent); // Attach to the root component
 }
 
 // Called when the game starts or when spawned
 void ABlockBox::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	UMaterialInstanceDynamic* DynMaterial = UMaterialInstanceDynamic::Create(BlockMaterial, nullptr);
+	// //
+	DynMaterial->SetScalarParameterValue("Size", 3.0);
+	DynMaterial->SetScalarParameterValue("DestroyAmount", 0.0);
+	//
+	SM_Block->SetMaterial(0,DynMaterial);
+}
+
+void ABlockBox::UpdateMaterialDestruction(float destroyAmount)
+{
+	Cast<UMaterialInstanceDynamic>(SM_Block->GetMaterial(0))->SetScalarParameterValue("DestroyAmount", destroyAmount);
+
 }
 
 // Called every frame
