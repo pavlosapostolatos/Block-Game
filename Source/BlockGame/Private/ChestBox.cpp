@@ -13,12 +13,14 @@ AChestBox::AChestBox()
 	
 	rotationData.LerpDuration = 1.0;
 	rotationData.EndValue = 45.0;
+	rotationData.direction = -1;
 }
 
 void AChestBox::Interact()
 {
 	UKismetSystemLibrary::PrintWarning("Interacted with chest");
 	rotationData.bLerping = true;
+	rotationData.direction=-rotationData.direction;
 }
 
 void AChestBox::Tick(float DeltaTime)
@@ -31,17 +33,20 @@ void AChestBox::RotateTop(float DeltaTime)
 {
 	if (!rotationData.bLerping)
 	{
-		rotationData.LerpTimer = 0.0f;
+		// rotationData.LerpTimer = 0.0f;
 		// rotationData.StartValue = 0.0f;
 		// rotationData.EndValue = 1.0f;
 	}
 	if (rotationData.bLerping)
 	{
-		rotationData.LerpTimer += DeltaTime;
+		rotationData.LerpTimer = rotationData.LerpTimer + rotationData.direction * DeltaTime;
 
-		if (rotationData.LerpTimer >= rotationData.LerpDuration)
+		if (
+			(rotationData.direction == 1 && rotationData.LerpTimer >= rotationData.LerpDuration) ||
+			(rotationData.direction == -1 && rotationData.LerpTimer < 0.0)
+			)
 		{
-			rotationData.LerpAmount = rotationData.EndValue;
+			// rotationData.LerpAmount = rotationData.EndValue;
 			rotationData.bLerping = false;
 		}
 		else
