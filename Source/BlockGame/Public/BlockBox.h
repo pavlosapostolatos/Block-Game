@@ -14,20 +14,8 @@ class BLOCKGAME_API ABlockBox : public AActor
 	GENERATED_BODY()
 	
 	UPROPERTY(EditAnywhere, Category=Mesh)
-	UStaticMeshComponent* SM_Block;
-
-	UPROPERTY(EditAnywhere, Category=Mesh)
 	UMaterialInterface* BlockMaterial;
 	
-	struct DestroyData
-	{
-		float DestroyAmount = 0.0f;
-		float LerpDuration = 3.0f; // Duration in seconds
-		float LerpTimer = 0.0f;
-		float StartValue = 0.0f;
-		float EndValue = 1.0f;
-		float bLerping = false;
-	};
 	
 	void DestroyBox(float DeltaTime);
 
@@ -36,8 +24,20 @@ public:
 	ABlockBox();
 
 protected:
+	struct LerpData
+	{
+		float LerpAmount = 0.0f;
+		float LerpDuration = 3.0f; // Duration in seconds
+		float LerpTimer = 0.0f;
+		float StartValue = 0.0f;
+		float EndValue = 1.0f;
+		float bLerping = false;
+	};
+	
+	UPROPERTY(EditAnywhere, Category=Mesh)
+	UStaticMeshComponent* SM_Block;
 
-	DestroyData destroyData;
+	LerpData destroyData;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

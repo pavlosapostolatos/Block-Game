@@ -6,9 +6,17 @@
 #include "ChestBox.generated.h"
 
 UCLASS()
-class BLOCKGAME_API AChestBox : public ABlockBoxInteractive//maybe abstract
+class BLOCKGAME_API AChestBox : public ABlockBoxInteractive //maybe abstract
 {
 	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, Category=Mesh)
+	UStaticMeshComponent* top;
+
+	UPROPERTY(EditAnywhere)
+	USceneComponent* scene;
+
+	LerpData rotationData;
 
 public:
 	// Sets default values for this actor's properties
@@ -18,5 +26,9 @@ protected:
 
 
 public:
+	virtual void Tick(float DeltaTime) override;
 	virtual void Interact() override;
+
+	UFUNCTION(BlueprintCallable)
+	void RotateTop(float DeltaTime);
 };
