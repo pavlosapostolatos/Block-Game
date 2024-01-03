@@ -82,6 +82,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	bool GetHasRifle();
 	void GetLineTraceFromCharacter(FHitResult& hit, bool& collided);
+	void SpawnStaticMesh(const FTransform& SpawnTransform) const;
 
 protected:
 	/** Called for movement input */

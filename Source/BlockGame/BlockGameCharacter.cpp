@@ -2,6 +2,7 @@
 
 #include "BlockGameCharacter.h"
 
+#include "BlockBoxInteractive.h"
 #include "Public\BlockBox.h"
 #include "BlockGameProjectile.h"
 #include "Animation/AnimInstance.h"
@@ -168,33 +169,42 @@ void ABlockGameCharacter::SpawnBox()
 		SpawnTransform.SetLocation(SpawnTransform.GetLocation().GridSnap(100));
 		//snaps blocks together. kinda hacky. make sure the dimensions of the box you are spawning is 100 too
 
-		if (BlueprintActorToSpawn.IsEmpty())
+		if(ABlockBoxInteractive* interactiveBox = Cast<ABlockBoxInteractive>(hit.GetActor()))
 		{
-			AStaticMeshActor* cube = GetWorld()->SpawnActorDeferred<AStaticMeshActor>(
-				AStaticMeshActor::StaticClass(), SpawnTransform, nullptr, nullptr,
-				ESpawnActorCollisionHandlingMethod::Undefined);
-			if (cube)
-			{
-				// Set the static mesh component for the spawned actor
-				UStaticMeshComponent* StaticMeshComponent = cube->GetStaticMeshComponent();
-				StaticMeshComponent->SetMobility(EComponentMobility::Movable);
-				if (StaticMeshComponent)
-				{
-					if (!boxToSpawn)
-						// UStaticMesh* YourStaticMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Script/Engine.StaticMesh'/Game/Meshes/SM_Block.SM_Block'"));
-						UKismetSystemLibrary::PrintWarning("Box to spawn is not set");
-					StaticMeshComponent->SetStaticMesh(boxToSpawn);
-				}
-
-				// Finish spawning the actor
-				cube->FinishSpawning(SpawnTransform);
-			}
+			interactiveBox->Interact();
+		}
+		else if (BlueprintActorToSpawn.IsEmpty())
+		{
+			SpawnStaticMesh(SpawnTransform);
 		}
 		else
 		{
-			AActor* cube = GetWorld()->SpawnActor<AActor>(BlueprintActorToSpawn[selectedBox], SpawnTransform);
+			ABlockBox* cube = GetWorld()->SpawnActor<ABlockBox>(BlueprintActorToSpawn[selectedBox], SpawnTransform);
 			cube->FinishSpawning(SpawnTransform);
 		}
+	}
+}
+
+void ABlockGameCharacter::SpawnStaticMesh(const FTransform& SpawnTransform) const
+{
+	AStaticMeshActor* cube = GetWorld()->SpawnActorDeferred<AStaticMeshActor>(
+		AStaticMeshActor::StaticClass(), SpawnTransform, nullptr, nullptr,
+		ESpawnActorCollisionHandlingMethod::Undefined);
+	if (cube)
+	{
+		// Set the static mesh component for the spawned actor
+		UStaticMeshComponent* StaticMeshComponent = cube->GetStaticMeshComponent();
+		StaticMeshComponent->SetMobility(EComponentMobility::Movable);
+		if (StaticMeshComponent)
+		{
+			if (!boxToSpawn)
+				// UStaticMesh* YourStaticMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Script/Engine.StaticMesh'/Game/Meshes/SM_Block.SM_Block'"));
+					UKismetSystemLibrary::PrintWarning("Box to spawn is not set");
+			StaticMeshComponent->SetStaticMesh(boxToSpawn);
+		}
+
+		// Finish spawning the actor
+		cube->FinishSpawning(SpawnTransform);
 	}
 }
 
