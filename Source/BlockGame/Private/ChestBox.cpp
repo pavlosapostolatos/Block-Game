@@ -16,6 +16,12 @@ AChestBox::AChestBox()
 	rotationData.direction = -1;
 }
 
+void AChestBox::BeginPlay()
+{
+	Super::BeginPlay();
+	top->SetMaterial(0,SM_Block->GetMaterial(0));
+}
+
 void AChestBox::Interact()
 {
 	UKismetSystemLibrary::PrintWarning("Interacted with chest");

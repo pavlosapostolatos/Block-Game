@@ -20,12 +20,13 @@ class BLOCKGAME_API AChestBox : public ABlockBoxInteractive //maybe abstract
 
 public:
 	// Sets default values for this actor's properties
-	AChestBox();
 
 protected:
+	virtual void BeginPlay() override;
 
 
 public:
+	AChestBox();
 	virtual void Tick(float DeltaTime) override;
 	virtual void Interact() override;
 
