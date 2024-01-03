@@ -51,7 +51,18 @@ class ABlockGameCharacter : public ACharacter
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* DeleteBlock;
-	
+
+	uint8 selectedBox:3 = 0;
+	void selectWhite()
+	{
+		selectedBox = 0;
+	};
+
+	void selectRed()
+	{
+		selectedBox = 1;
+	};
+
 public:
 	ABlockGameCharacter();
 
@@ -79,7 +90,6 @@ protected:
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
 
-protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 	// End of APawn interface
@@ -87,14 +97,16 @@ protected:
 public:
 	/** Returns Mesh1P subobject **/
 
+	//DEPRECATED
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	UStaticMesh* boxToSpawn;
-	
+
+	//DEPRECATED
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	UBlueprint* actorToSpawn;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	TSubclassOf<class AActor> BlueprintActorToSpawn;
+	TArray<TSubclassOf<class ABlockBox>> BlueprintActorToSpawn;
 	//
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	UClass* test; //the correct way to do this shit

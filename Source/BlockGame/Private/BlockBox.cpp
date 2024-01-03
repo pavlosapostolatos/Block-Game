@@ -31,7 +31,6 @@ void ABlockBox::BeginPlay()
 void ABlockBox::UpdateMaterialDestruction(float destroyAmount)
 {
 	Cast<UMaterialInstanceDynamic>(SM_Block->GetMaterial(0))->SetScalarParameterValue("DestroyAmount", destroyAmount);
-
 }
 
 // Called every frame

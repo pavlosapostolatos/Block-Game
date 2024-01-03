@@ -17,7 +17,7 @@ class BLOCKGAME_API ABlockBox : public AActor
 	UStaticMeshComponent* SM_Block;
 
 	UPROPERTY(EditAnywhere, Category=Mesh)
-	UMaterial* BlockMaterial;
+	UMaterialInterface* BlockMaterial;
 	
 	struct DestroyData
 	{
@@ -28,7 +28,6 @@ class BLOCKGAME_API ABlockBox : public AActor
 		float EndValue = 1.0f;
 		float bLerping = false;
 	};
-	DestroyData destroyData;
 	
 	void DestroyBox(float DeltaTime);
 
@@ -37,6 +36,8 @@ public:
 	ABlockBox();
 
 protected:
+
+	DestroyData destroyData;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

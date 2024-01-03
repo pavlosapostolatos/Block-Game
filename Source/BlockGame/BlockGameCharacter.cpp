@@ -86,6 +86,13 @@ void ABlockGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		//Another solution would be not to set that and use ETriggerEvent::Started
 		EnhancedInputComponent->BindAction(DeleteBlock, ETriggerEvent::Triggered, this,
 		                                   &ABlockGameCharacter::DeleteBox);
+
+
+		InputComponent->BindKey(EKeys::One, EInputEvent::IE_Pressed,this, &ABlockGameCharacter::selectWhite);
+		InputComponent->BindKey(EKeys::Gamepad_FaceButton_Top, EInputEvent::IE_Pressed,this, &ABlockGameCharacter::selectWhite);
+		InputComponent->BindKey(EKeys::Two, EInputEvent::IE_Pressed,this, &ABlockGameCharacter::selectRed);
+		InputComponent->BindKey(EKeys::Gamepad_FaceButton_Left, EInputEvent::IE_Pressed,this, &ABlockGameCharacter::selectRed);
+
 	}
 	else
 	{
@@ -161,7 +168,7 @@ void ABlockGameCharacter::SpawnBox()
 		SpawnTransform.SetLocation(SpawnTransform.GetLocation().GridSnap(100));
 		//snaps blocks together. kinda hacky. make sure the dimensions of the box you are spawning is 100 too
 
-		if (!BlueprintActorToSpawn)
+		if (BlueprintActorToSpawn.IsEmpty())
 		{
 			AStaticMeshActor* cube = GetWorld()->SpawnActorDeferred<AStaticMeshActor>(
 				AStaticMeshActor::StaticClass(), SpawnTransform, nullptr, nullptr,
@@ -185,7 +192,7 @@ void ABlockGameCharacter::SpawnBox()
 		}
 		else
 		{
-			AActor* cube = GetWorld()->SpawnActor<AActor>(BlueprintActorToSpawn, SpawnTransform);
+			AActor* cube = GetWorld()->SpawnActor<AActor>(BlueprintActorToSpawn[selectedBox], SpawnTransform);
 			cube->FinishSpawning(SpawnTransform);
 		}
 	}
