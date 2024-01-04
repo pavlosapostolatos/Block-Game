@@ -46,10 +46,19 @@ ABlockGameCharacter::ABlockGameCharacter()
 	Mesh1P->CastShadow = false;
 	//Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
+
+	BlockOutline = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BlockOutline"));
+	BlockOutline->SetupAttachment(GetCapsuleComponent());
+	BlockOutline->SetVisibility(false);
+	BlockOutline->bCastDynamicShadow = false;
+	BlockOutline->CastShadow = false;
+	BlockOutline->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void ABlockGameCharacter::BeginPlay()
 {
+	BlockOutline->SetStaticMesh(SM_BlockOutline);
+
 	// Call the base class  
 	Super::BeginPlay();
 
@@ -90,17 +99,21 @@ void ABlockGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		                                   &ABlockGameCharacter::DeleteBox);
 
 
-		InputComponent->BindKey(EKeys::One, EInputEvent::IE_Pressed,this, &ABlockGameCharacter::selectWhite);
-		InputComponent->BindKey(EKeys::Gamepad_FaceButton_Top, EInputEvent::IE_Pressed,this, &ABlockGameCharacter::selectWhite);
-		InputComponent->BindKey(EKeys::Two, EInputEvent::IE_Pressed,this, &ABlockGameCharacter::selectRed);
-		InputComponent->BindKey(EKeys::Gamepad_FaceButton_Left, EInputEvent::IE_Pressed,this, &ABlockGameCharacter::selectRed);
-		InputComponent->BindKey(EKeys::Three, EInputEvent::IE_Pressed,this, &ABlockGameCharacter::selectGreen);
-		InputComponent->BindKey(EKeys::Gamepad_FaceButton_Bottom, EInputEvent::IE_Pressed,this, &ABlockGameCharacter::selectGreen);
-		InputComponent->BindKey(EKeys::Four, EInputEvent::IE_Pressed,this, &ABlockGameCharacter::selectChest);
-		InputComponent->BindKey(EKeys::Gamepad_FaceButton_Right, EInputEvent::IE_Pressed,this, &ABlockGameCharacter::selectChest);
-		InputComponent->BindKey(EKeys::Five, EInputEvent::IE_Pressed,this, &ABlockGameCharacter::selectLamp);
-		InputComponent->BindKey(EKeys::Gamepad_DPad_Up, EInputEvent::IE_Pressed,this, &ABlockGameCharacter::selectLamp);
-
+		InputComponent->BindKey(EKeys::One, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::selectWhite);
+		InputComponent->BindKey(EKeys::Gamepad_FaceButton_Top, EInputEvent::IE_Pressed, this,
+		                        &ABlockGameCharacter::selectWhite);
+		InputComponent->BindKey(EKeys::Two, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::selectRed);
+		InputComponent->BindKey(EKeys::Gamepad_FaceButton_Left, EInputEvent::IE_Pressed, this,
+		                        &ABlockGameCharacter::selectRed);
+		InputComponent->BindKey(EKeys::Three, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::selectGreen);
+		InputComponent->BindKey(EKeys::Gamepad_FaceButton_Bottom, EInputEvent::IE_Pressed, this,
+		                        &ABlockGameCharacter::selectGreen);
+		InputComponent->BindKey(EKeys::Four, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::selectChest);
+		InputComponent->BindKey(EKeys::Gamepad_FaceButton_Right, EInputEvent::IE_Pressed, this,
+		                        &ABlockGameCharacter::selectChest);
+		InputComponent->BindKey(EKeys::Five, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::selectLamp);
+		InputComponent->BindKey(EKeys::Gamepad_DPad_Up, EInputEvent::IE_Pressed, this,
+		                        &ABlockGameCharacter::selectLamp);
 	}
 	else
 	{
@@ -148,8 +161,24 @@ bool ABlockGameCharacter::GetHasRifle()
 	return bHasRifle;
 }
 
+void ABlockGameCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	FHitResult hit;
+	if (GetLineTraceFromCharacter(hit) && Cast<ABlockBox>(hit.GetActor()))
+	{
+		// BlockOutline->SetWorldLocation(hit.GetActor()->GetActorLocation());
+		BlockOutline->SetWorldTransform(FTransform(hit.GetActor()->GetActorLocation()));
+		BlockOutline->SetVisibility(true);
+	}
+	else
+	{
+		BlockOutline->SetVisibility(false);
+	}
+}
 
-void ABlockGameCharacter::GetLineTraceFromCharacter(FHitResult& hit, bool& collided) //Could go in a lib file
+bool ABlockGameCharacter::GetLineTraceFromCharacter(FHitResult& hit) const
+//Could go in a lib file
 {
 	APlayerCameraManager* cameraManager = UGameplayStatics::GetPlayerCameraManager(this, 0);
 	// FVector4d location = GetActorLocation();//the same??
@@ -158,15 +187,14 @@ void ABlockGameCharacter::GetLineTraceFromCharacter(FHitResult& hit, bool& colli
 	FVector location = cameraManager->GetCameraLocation();
 	FVector end = location + forward * 50000;
 	TArray<AActor*> ignore;
-	collided = UKismetSystemLibrary::LineTraceSingle(this, location, end, TraceTypeQuery1,
-	                                                 0, ignore, EDrawDebugTrace::None, hit, true);
+	return UKismetSystemLibrary::LineTraceSingle(this, location, end, TraceTypeQuery1,
+	                                             0, ignore, EDrawDebugTrace::None, hit, true);
 }
 
 void ABlockGameCharacter::SpawnBox()
 {
 	FHitResult hit;
-	bool collided;
-	GetLineTraceFromCharacter(hit, collided);
+	bool collided = GetLineTraceFromCharacter(hit);
 
 	if (collided)
 	{
@@ -176,7 +204,7 @@ void ABlockGameCharacter::SpawnBox()
 		SpawnTransform.SetLocation(SpawnTransform.GetLocation().GridSnap(100));
 		//snaps blocks together. kinda hacky. make sure the dimensions of the box you are spawning is 100 too
 
-		if(ABlockBoxInteractive* interactiveBox = Cast<ABlockBoxInteractive>(hit.GetActor()))
+		if (ABlockBoxInteractive* interactiveBox = Cast<ABlockBoxInteractive>(hit.GetActor()))
 		{
 			interactiveBox->Interact();
 		}
@@ -206,7 +234,7 @@ void ABlockGameCharacter::SpawnStaticMesh(const FTransform& SpawnTransform) cons
 		{
 			if (!boxToSpawn)
 				// UStaticMesh* YourStaticMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Script/Engine.StaticMesh'/Game/Meshes/SM_Block.SM_Block'"));
-					UKismetSystemLibrary::PrintWarning("Box to spawn is not set");
+				UKismetSystemLibrary::PrintWarning("Box to spawn is not set");
 			StaticMeshComponent->SetStaticMesh(boxToSpawn);
 		}
 
@@ -218,8 +246,7 @@ void ABlockGameCharacter::SpawnStaticMesh(const FTransform& SpawnTransform) cons
 void ABlockGameCharacter::DeleteBox()
 {
 	FHitResult hit;
-	bool collided;
-	GetLineTraceFromCharacter(hit, collided);
+	const bool collided = GetLineTraceFromCharacter(hit);
 
 	// if (collided && hit.GetActor()->GetClass() == BlueprintActorToSpawn )
 	// {

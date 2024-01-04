@@ -25,6 +25,10 @@ class ABlockGameCharacter : public ACharacter
 	UPROPERTY(VisibleDefaultsOnly, Category=Mesh)
 	USkeletalMeshComponent* Mesh1P;
 
+	/** Pawn mesh: 1st person view (arms; seen only by self) */
+	UPROPERTY(VisibleDefaultsOnly, Category=Mesh)
+	UStaticMeshComponent* BlockOutline;
+	
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FirstPersonCameraComponent;
@@ -43,7 +47,7 @@ class ABlockGameCharacter : public ACharacter
 
 	/** Look Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* LookAction;
+	UInputAction* LookAction;
 
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
@@ -96,7 +100,8 @@ public:
 	/** Getter for the bool */
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	bool GetHasRifle();
-	void GetLineTraceFromCharacter(FHitResult& hit, bool& collided);
+	virtual void Tick(float DeltaTime) override;
+	bool GetLineTraceFromCharacter(FHitResult& hit) const;
 	void SpawnStaticMesh(const FTransform& SpawnTransform) const;
 
 protected:
@@ -126,7 +131,10 @@ public:
 	//
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	UClass* test; //the correct way to do this shit
-	
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+    UStaticMesh* SM_BlockOutline;
+    	
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
