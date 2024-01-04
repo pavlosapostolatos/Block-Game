@@ -29,7 +29,8 @@ ABlockGameCharacter::ABlockGameCharacter()
 	bHasRifle = false;
 
 	// Set size for collision capsule
-	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
+	GetCapsuleComponent()->InitCapsuleSize(40.f, 96.0f);
+	GetCapsuleComponent()->SetCapsuleRadius(40.f);
 
 	// Create a CameraComponent	
 	FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
@@ -93,6 +94,12 @@ void ABlockGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		InputComponent->BindKey(EKeys::Gamepad_FaceButton_Top, EInputEvent::IE_Pressed,this, &ABlockGameCharacter::selectWhite);
 		InputComponent->BindKey(EKeys::Two, EInputEvent::IE_Pressed,this, &ABlockGameCharacter::selectRed);
 		InputComponent->BindKey(EKeys::Gamepad_FaceButton_Left, EInputEvent::IE_Pressed,this, &ABlockGameCharacter::selectRed);
+		InputComponent->BindKey(EKeys::Three, EInputEvent::IE_Pressed,this, &ABlockGameCharacter::selectGreen);
+		InputComponent->BindKey(EKeys::Gamepad_FaceButton_Bottom, EInputEvent::IE_Pressed,this, &ABlockGameCharacter::selectGreen);
+		InputComponent->BindKey(EKeys::Four, EInputEvent::IE_Pressed,this, &ABlockGameCharacter::selectChest);
+		InputComponent->BindKey(EKeys::Gamepad_FaceButton_Right, EInputEvent::IE_Pressed,this, &ABlockGameCharacter::selectChest);
+		InputComponent->BindKey(EKeys::Five, EInputEvent::IE_Pressed,this, &ABlockGameCharacter::selectLamp);
+		InputComponent->BindKey(EKeys::Gamepad_DPad_Up, EInputEvent::IE_Pressed,this, &ABlockGameCharacter::selectLamp);
 
 	}
 	else
@@ -152,7 +159,7 @@ void ABlockGameCharacter::GetLineTraceFromCharacter(FHitResult& hit, bool& colli
 	FVector end = location + forward * 50000;
 	TArray<AActor*> ignore;
 	collided = UKismetSystemLibrary::LineTraceSingle(this, location, end, TraceTypeQuery1,
-	                                                 0, ignore, EDrawDebugTrace::Persistent, hit, true);
+	                                                 0, ignore, EDrawDebugTrace::None, hit, true);
 }
 
 void ABlockGameCharacter::SpawnBox()

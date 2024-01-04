@@ -5,7 +5,7 @@
 #include "GameFramework/Actor.h"
 #include "BlockBoxInteractive.generated.h"
 
-UCLASS()
+UCLASS(Abstract)
 class BLOCKGAME_API ABlockBoxInteractive : public ABlockBox//maybe abstract
 {
 	GENERATED_BODY()
@@ -19,7 +19,7 @@ protected:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	virtual void Interact();
+	virtual void Interact() /*= 0*/;
 };
 
 

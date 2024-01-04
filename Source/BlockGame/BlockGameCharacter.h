@@ -63,6 +63,21 @@ class ABlockGameCharacter : public ACharacter
 		selectedBox = 1;
 	};
 
+	void selectGreen()
+	{
+		selectedBox = 2;
+	};
+	
+	void selectChest()
+	{
+		selectedBox = 3;
+	};
+	
+	void selectLamp()
+	{
+		selectedBox = 4;
+	};
+
 public:
 	ABlockGameCharacter();
 
