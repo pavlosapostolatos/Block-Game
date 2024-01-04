@@ -214,6 +214,10 @@ void ABlockGameCharacter::SpawnBox()
 		}
 		else
 		{
+			FVector rotation = GetCapsuleComponent()->GetComponentLocation() - SpawnTransform.GetLocation() ;
+			rotation.Z = 0;
+			SpawnTransform.SetRotation(rotation.Rotation().GridSnap(FRotator(0,90,0)).Quaternion());
+
 			ABlockBox* cube = GetWorld()->SpawnActor<ABlockBox>(BlueprintActorToSpawn[selectedBox], SpawnTransform);
 			cube->FinishSpawning(SpawnTransform);
 		}
