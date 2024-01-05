@@ -82,6 +82,10 @@ class ABlockGameCharacter : public ACharacter
 		selectedBox = 4;
 	};
 
+	void selectStair()
+	{
+		selectedBox = 5;
+	};
 public:
 	ABlockGameCharacter();
 

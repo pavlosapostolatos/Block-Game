@@ -115,6 +115,9 @@ void ABlockGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		InputComponent->BindKey(EKeys::Five, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::selectLamp);
 		InputComponent->BindKey(EKeys::Gamepad_DPad_Up, EInputEvent::IE_Pressed, this,
 		                        &ABlockGameCharacter::selectLamp);
+		InputComponent->BindKey(EKeys::Six, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::selectStair);
+		InputComponent->BindKey(EKeys::Gamepad_DPad_Down, EInputEvent::IE_Pressed, this,
+								&ABlockGameCharacter::selectStair);
 	}
 	else
 	{
