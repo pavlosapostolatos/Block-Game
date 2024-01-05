@@ -32,4 +32,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void RotateTop(float DeltaTime);
+
+	virtual UE::Math::TQuat<double> GetRotation(FVector originLocation,FVector SpawnLocation) override;
 };

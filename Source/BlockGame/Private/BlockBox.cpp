@@ -45,7 +45,6 @@ void ABlockBox::DestroyBox()
 	destroyData.bLerping=true;
 }
 
-
 void ABlockBox::DestroyBox(float DeltaTime)
 {
 	if (!destroyData.bLerping)
@@ -74,5 +73,10 @@ void ABlockBox::DestroyBox(float DeltaTime)
 // Call function or perform action for update
 		}
 	}
+}
+
+UE::Math::TQuat<double> ABlockBox::GetRotation(FVector originLocation,FVector SpawnLocation)
+{
+	return UE::Math::TQuat(0.0,0.0,0.0,0.0);
 }
 

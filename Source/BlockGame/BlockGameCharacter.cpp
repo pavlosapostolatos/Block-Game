@@ -4,7 +4,6 @@
 
 #include "BlockBoxInteractive.h"
 #include "Public\BlockBox.h"
-#include "BlockGameProjectile.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -12,12 +11,12 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
-#include "K2Node_SpawnActor.h"
-#include "Components/TimelineComponent.h"
 #include "Engine/LocalPlayer.h"
 #include "Engine/StaticMeshActor.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Utils/Utils.h"
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 //////////////////////////////////////////////////////////////////////////
@@ -53,6 +52,8 @@ ABlockGameCharacter::ABlockGameCharacter()
 	BlockOutline->bCastDynamicShadow = false;
 	BlockOutline->CastShadow = false;
 	BlockOutline->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	GetCharacterMovement()->MaxStepHeight = 51;
 }
 
 void ABlockGameCharacter::BeginPlay()
@@ -214,11 +215,12 @@ void ABlockGameCharacter::SpawnBox()
 		}
 		else
 		{
-			FVector rotation = GetCapsuleComponent()->GetComponentLocation() - SpawnTransform.GetLocation() ;
-			rotation.Z = 0;
-			SpawnTransform.SetRotation(rotation.Rotation().GridSnap(FRotator(0,90,0)).Quaternion());
+			if (checkBoxOverlap(this, SpawnTransform)) return;
+			ABlockBox* cube = Cast<ABlockBox>(BlueprintActorToSpawn[selectedBox]->GetDefaultObject());
+			
+			SpawnTransform.SetRotation(cube->GetRotation(GetCapsuleComponent()->GetComponentLocation(), SpawnTransform.GetLocation()));
 
-			ABlockBox* cube = GetWorld()->SpawnActor<ABlockBox>(BlueprintActorToSpawn[selectedBox], SpawnTransform);
+			cube = GetWorld()->SpawnActor<ABlockBox>(BlueprintActorToSpawn[selectedBox], SpawnTransform);
 			cube->FinishSpawning(SpawnTransform);
 		}
 	}

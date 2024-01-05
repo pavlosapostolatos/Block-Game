@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Utils/Structs.h"
 #include "BlockBox.generated.h"
 
 struct DestroyData;
@@ -16,24 +17,9 @@ class BLOCKGAME_API ABlockBox : public AActor
 	UPROPERTY(EditAnywhere, Category=Mesh)
 	UMaterialInterface* BlockMaterial;
 	
-	
 	void DestroyBox(float DeltaTime);
 
-public:
-	// Sets default values for this actor's properties
-	ABlockBox();
-
 protected:
-	struct LerpData
-	{
-		float LerpAmount = 0.0f;
-		float LerpDuration = 3.0f; // Duration in seconds
-		float LerpTimer = 0.0f;
-		float StartValue = 0.0f;
-		float EndValue = 1.0f;
-		float bLerping = false;
-		int8 direction:2 = 1;
-	};
 	
 	UPROPERTY(EditAnywhere, Category=Mesh)
 	UStaticMeshComponent* SM_Block;
@@ -47,10 +33,16 @@ protected:
 	void UpdateMaterialDestruction(float destroyAmount);
 
 public:
+	// Sets default values for this actor's properties
+	ABlockBox();
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable)
 	void DestroyBox();
+
+	// UFUNCTION(BlueprintCallable)
+	virtual UE::Math::TQuat<double> GetRotation(FVector originLocation,FVector SpawnLocation);
 };
 

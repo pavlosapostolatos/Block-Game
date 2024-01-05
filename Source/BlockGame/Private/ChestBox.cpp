@@ -66,4 +66,12 @@ void AChestBox::RotateTop(float DeltaTime)
 	}
 }
 
+UE::Math::TQuat<double> AChestBox::GetRotation(FVector originLocation,FVector SpawnLocation)
+{
+	FVector rotation = originLocation - SpawnLocation;
+	rotation.Z = 0;
+	return rotation.Rotation().GridSnap(FRotator(0, 90, 0)).Quaternion();
+}
+
+
 
