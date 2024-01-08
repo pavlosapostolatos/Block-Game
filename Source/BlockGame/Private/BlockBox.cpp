@@ -1,8 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "..\Public\BlockBox.h"
+#include "BlockBox.h"
 
+#include "BlockGameInstance.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 // Sets default values
@@ -43,6 +45,10 @@ void ABlockBox::Tick(float DeltaTime)
 void ABlockBox::DestroyBox()
 {
 	destroyData.bLerping=true;
+	UBlockGameInstance* gi = Cast<UBlockGameInstance>(UGameplayStatics::GetGameInstance(this));
+
+	check(gi);
+	gi->DeleteBox(FBlockData(TSubclassOf<ABlockBox>(StaticClass()), GetActorLocation(),GetActorRotation()));
 }
 
 void ABlockBox::DestroyBox(float DeltaTime)

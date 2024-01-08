@@ -3,6 +3,7 @@
 #include "BlockGameCharacter.h"
 
 #include "BlockBoxInteractive.h"
+#include "BlockGameInstance.h"
 #include "Public\BlockBox.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
@@ -225,6 +226,11 @@ void ABlockGameCharacter::SpawnBox()
 
 			cube = GetWorld()->SpawnActor<ABlockBox>(BlueprintActorToSpawn[selectedBox], SpawnTransform);
 			cube->FinishSpawning(SpawnTransform);
+
+			UBlockGameInstance* gi = Cast<UBlockGameInstance>(UGameplayStatics::GetGameInstance(this));
+
+			check(gi);
+			gi->AddBox(FBlockData(BlueprintActorToSpawn[selectedBox], SpawnTransform.GetLocation(),SpawnTransform.Rotator()));
 		}
 	}
 }

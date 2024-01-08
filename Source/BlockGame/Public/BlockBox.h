@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Utils/Structs.h"
+#include "Structs\LerpData.h"
 #include "BlockBox.generated.h"
 
 struct DestroyData;

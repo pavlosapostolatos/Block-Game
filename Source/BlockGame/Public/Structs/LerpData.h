@@ -1,4 +1,8 @@
-﻿struct LerpData
+﻿#pragma once
+
+// #include "LerpData.generated.h"
+
+struct LerpData
 {
 	float LerpAmount = 0.0f;
 	float LerpDuration = 3.0f; // Duration in seconds

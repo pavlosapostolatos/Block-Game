@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "BlockBoxInteractive.h"
 #include "GameFramework/Actor.h"
+#include "Structs\LerpData.h"
 #include "ChestBox.generated.h"
 
 UCLASS()
