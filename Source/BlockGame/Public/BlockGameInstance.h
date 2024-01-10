@@ -19,6 +19,9 @@ class BLOCKGAME_API UBlockGameInstance : public UGameInstance
 	TSet<FBlockData> savedBlocks;
 
 public:
+
+	UBlockGameInstance() = default;
+
 	[[nodiscard]] TSet<FBlockData> SavedBlocks() const
 	{
 		return savedBlocks;

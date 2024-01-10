@@ -20,5 +20,6 @@ void UBlockGameInstance::AddBox(FBlockData blockData)
 
 void UBlockGameInstance::DeleteBox(FBlockData blockData)
 {
+	// savedBlocks.RemoveByHash(GetValueTypeHash(blockData), GetValueTypeHash(blockData));
 	savedBlocks.Remove(blockData);
 }

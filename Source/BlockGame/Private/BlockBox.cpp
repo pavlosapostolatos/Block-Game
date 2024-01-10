@@ -48,7 +48,7 @@ void ABlockBox::DestroyBox()
 	UBlockGameInstance* gi = Cast<UBlockGameInstance>(UGameplayStatics::GetGameInstance(this));
 
 	check(gi);
-	gi->DeleteBox(FBlockData(TSubclassOf<ABlockBox>(StaticClass()), GetActorLocation(),GetActorRotation()));
+	gi->DeleteBox(FBlockData(TSubclassOf<ABlockBox>(GetClass()), GetActorLocation(),GetActorRotation()));
 }
 
 void ABlockBox::DestroyBox(float DeltaTime)
