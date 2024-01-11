@@ -49,6 +49,7 @@ void ABlockBox::DestroyBox()
 
 	check(gi);
 	gi->DeleteBox(FBlockData(TSubclassOf<ABlockBox>(GetClass()), GetActorLocation(),GetActorRotation()));
+	gi->AutoSave();//Waiting for the destroyData timer to end is overkill here
 }
 
 void ABlockBox::DestroyBox(float DeltaTime)

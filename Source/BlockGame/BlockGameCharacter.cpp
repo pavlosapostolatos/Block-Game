@@ -233,6 +233,7 @@ void ABlockGameCharacter::SpawnBox()
 
 			check(gi);
 			gi->AddBox(FBlockData(BlueprintActorToSpawn[selectedBox], SpawnTransform.GetLocation(),SpawnTransform.Rotator()));
+			gi->AutoSave();
 		}
 	}
 }

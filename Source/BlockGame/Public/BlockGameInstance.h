@@ -17,6 +17,7 @@ class BLOCKGAME_API UBlockGameInstance : public UGameInstance
 
 	UPROPERTY(VisibleAnywhere)
 	TSet<FBlockData> savedBlocks;
+	void SaveGame(int index);
 
 public:
 
@@ -40,4 +41,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SaveGame();
+	UFUNCTION(BlueprintCallable)
+	void AutoSave();
 };

@@ -12,8 +12,9 @@ void ASaveMap::BeginPlay()
 	UBlockGameInstance* gi = Cast<UBlockGameInstance>(UGameplayStatics::GetGameInstance(this));
 	FString LevelName =  UGameplayStatics::GetCurrentLevelName(this);
 
-	UBlockSaveGame* save = Cast<UBlockSaveGame>(UGameplayStatics::LoadGameFromSlot(LevelName,0));
-
+s	UBlockSaveGame* save = Cast<UBlockSaveGame>(UGameplayStatics::LoadGameFromSlot(LevelName,0));
+	if(save == nullptr)
+		save = Cast<UBlockSaveGame>(UGameplayStatics::LoadGameFromSlot(LevelName,1));
 	if(save == nullptr)
 		return;
 	
@@ -21,7 +22,7 @@ void ASaveMap::BeginPlay()
 
 	for (FBlockData block : save->GetSavedBlocks())
 	{
-		gi->AddBox(block);
+		gi->AddBox(block);//maybe have game instance itself do this???
 		GetWorld()->SpawnActor<ABlockBox>(block.type, UE::Math::TTransform(block.rotation, block.location));
 	}
 
