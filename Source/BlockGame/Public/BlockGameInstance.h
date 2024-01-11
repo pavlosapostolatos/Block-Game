@@ -37,4 +37,7 @@ public:
 	// {
 	// 	savedBlocks = SavedBlocks;
 	// }
+
+	UFUNCTION(BlueprintCallable)
+	void SaveGame();
 };

@@ -119,6 +119,8 @@ void ABlockGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		InputComponent->BindKey(EKeys::Six, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::selectStair);
 		InputComponent->BindKey(EKeys::Gamepad_DPad_Down, EInputEvent::IE_Pressed, this,
 								&ABlockGameCharacter::selectStair);
+
+		InputComponent->BindKey(EKeys::Z, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::SaveGame);
 	}
 	else
 	{
@@ -273,4 +275,10 @@ void ABlockGameCharacter::DeleteBox()
 		UKismetSystemLibrary::PrintString(this, hit.GetActor()->GetActorNameOrLabel());
 		Cast<ABlockBox>(hit.GetActor())->DestroyBox();
 	}
+}
+
+
+void ABlockGameCharacter::SaveGame()
+{
+	Cast<UBlockGameInstance>(UGameplayStatics::GetGameInstance(this))->SaveGame();
 }
