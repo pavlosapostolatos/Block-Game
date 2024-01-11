@@ -17,7 +17,8 @@ class BLOCKGAME_API UBlockGameInstance : public UGameInstance
 
 	UPROPERTY(VisibleAnywhere)
 	TSet<FBlockData> savedBlocks;
-	void SaveGame(int index);
+	
+	void SaveGame(FString index);
 
 public:
 

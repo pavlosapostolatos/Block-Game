@@ -29,27 +29,26 @@ void UBlockGameInstance::DeleteBox(FBlockData blockData)
 
 void UBlockGameInstance::SaveGame()
 {
-	SaveGame(0);
+	SaveGame(UGameplayStatics::GetCurrentLevelName(this));
 }
-void UBlockGameInstance::SaveGame(int index)
+void UBlockGameInstance::SaveGame(FString LevelName)
 {
 	UBlockSaveGame* save;
-	const FString LevelName = UGameplayStatics::GetCurrentLevelName(this);
-	if(! UGameplayStatics::DoesSaveGameExist(LevelName,index))
+	if(! UGameplayStatics::DoesSaveGameExist(LevelName,0))
 	{
 		save = Cast<UBlockSaveGame>(
 			UGameplayStatics::CreateSaveGameObject(UBlockSaveGame::StaticClass()));
 	}
 	else
 	{
-		save = Cast<UBlockSaveGame>(UGameplayStatics::LoadGameFromSlot(LevelName,index));
+		save = Cast<UBlockSaveGame>(UGameplayStatics::LoadGameFromSlot(LevelName,0));
 	}
 
 	save->SetSavedBlocks(this->SavedBlocks());
-	UGameplayStatics::SaveGameToSlot(save,LevelName, index);
+	UGameplayStatics::SaveGameToSlot(save,LevelName, 0);
 }
 
 void UBlockGameInstance::AutoSave()
 {
-	SaveGame(1);
+	SaveGame(UGameplayStatics::GetCurrentLevelName(this) + "AutoSave");
 }

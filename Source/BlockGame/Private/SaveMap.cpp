@@ -12,9 +12,9 @@ void ASaveMap::BeginPlay()
 	UBlockGameInstance* gi = Cast<UBlockGameInstance>(UGameplayStatics::GetGameInstance(this));
 	FString LevelName =  UGameplayStatics::GetCurrentLevelName(this);
 
-s	UBlockSaveGame* save = Cast<UBlockSaveGame>(UGameplayStatics::LoadGameFromSlot(LevelName,0));
+	UBlockSaveGame* save = Cast<UBlockSaveGame>(UGameplayStatics::LoadGameFromSlot(LevelName,0));
 	if(save == nullptr)
-		save = Cast<UBlockSaveGame>(UGameplayStatics::LoadGameFromSlot(LevelName,1));
+		save = Cast<UBlockSaveGame>(UGameplayStatics::LoadGameFromSlot(LevelName + "AutoSave",0));
 	if(save == nullptr)
 		return;
 	
