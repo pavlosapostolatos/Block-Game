@@ -56,6 +56,8 @@ class ABlockGameCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* DeleteBlock;
 
+	int health = 100;
+	
 	uint8 selectedBox:3 = 0;
 	void selectWhite()
 	{
@@ -101,6 +103,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	void SetHasRifle(bool bNewHasRifle);
 
+	UFUNCTION(BlueprintCallable)
+	void Heal();
+
+	UFUNCTION(BlueprintCallable)
+	void Damage();
+	
 	/** Getter for the bool */
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	bool GetHasRifle();

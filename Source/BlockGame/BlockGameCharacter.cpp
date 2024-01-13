@@ -283,3 +283,15 @@ void ABlockGameCharacter::SaveGame()
 {
 	Cast<UBlockGameInstance>(UGameplayStatics::GetGameInstance(this))->SaveGame();
 }
+
+void ABlockGameCharacter::Heal()
+{
+	health++;
+	UKismetSystemLibrary::PrintString(this, "health: " + FString::FromInt(health));
+};
+
+void ABlockGameCharacter::Damage()
+{
+	health-=11;
+	UKismetSystemLibrary::PrintString(this, "health: " + FString::FromInt(health));
+};
