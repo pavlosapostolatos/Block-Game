@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "HealthWidget.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "BlockGameCharacter.generated.h"
@@ -28,7 +29,10 @@ class ABlockGameCharacter : public ACharacter
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, Category=Mesh)
 	UStaticMeshComponent* BlockOutline;
-	
+
+	UPROPERTY(VisibleDefaultsOnly, Category=Widget)
+	UHealthWidget* HealthWidget;
+
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FirstPersonCameraComponent;
@@ -56,9 +60,11 @@ class ABlockGameCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* DeleteBlock;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Widget, meta=(AllowPrivateAccess = "true"))
 	int health = 100;
-	
-	uint8 selectedBox:3 = 0;
+
+	uint8 selectedBox : 3 = 0;
+
 	void selectWhite()
 	{
 		selectedBox = 0;
@@ -73,12 +79,12 @@ class ABlockGameCharacter : public ACharacter
 	{
 		selectedBox = 2;
 	};
-	
+
 	void selectChest()
 	{
 		selectedBox = 3;
 	};
-	
+
 	void selectLamp()
 	{
 		selectedBox = 4;
@@ -88,6 +94,7 @@ class ABlockGameCharacter : public ACharacter
 	{
 		selectedBox = 5;
 	};
+
 public:
 	ABlockGameCharacter();
 
@@ -108,7 +115,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void Damage();
-	
+
 	/** Getter for the bool */
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	bool GetHasRifle();
@@ -132,25 +139,28 @@ public:
 	/** Returns Mesh1P subobject **/
 
 	//DEPRECATED
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMesh* boxToSpawn;
 
 	//DEPRECATED
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UBlueprint* actorToSpawn;
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<TSubclassOf<class ABlockBox>> BlueprintActorToSpawn;
 	//
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UClass* test; //the correct way to do this shit
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-    UStaticMesh* SM_BlockOutline;
-    	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UStaticMesh* SM_BlockOutline;
+
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Widget)
+	TSubclassOf<UHealthWidget> C_HealthWidget;
 
 	UFUNCTION(BlueprintCallable)
 	virtual void SpawnBox();
@@ -158,4 +168,3 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void DeleteBox();
 };
-

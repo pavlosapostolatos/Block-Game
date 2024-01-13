@@ -12,6 +12,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "Blueprint/UserWidget.h"
 #include "Engine/LocalPlayer.h"
 #include "Engine/StaticMeshActor.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -73,6 +74,10 @@ void ABlockGameCharacter::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
+
+	HealthWidget = CreateWidget<UHealthWidget>(GetWorld(), C_HealthWidget);
+	HealthWidget->SetHealth(health);
+	HealthWidget->AddToViewport();
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
@@ -118,7 +123,7 @@ void ABlockGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		                        &ABlockGameCharacter::selectLamp);
 		InputComponent->BindKey(EKeys::Six, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::selectStair);
 		InputComponent->BindKey(EKeys::Gamepad_DPad_Down, EInputEvent::IE_Pressed, this,
-								&ABlockGameCharacter::selectStair);
+		                        &ABlockGameCharacter::selectStair);
 
 		InputComponent->BindKey(EKeys::Z, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::SaveGame);
 	}
@@ -223,8 +228,9 @@ void ABlockGameCharacter::SpawnBox()
 		{
 			if (checkBoxOverlap(this, SpawnTransform)) return;
 			ABlockBox* cube = Cast<ABlockBox>(BlueprintActorToSpawn[selectedBox]->GetDefaultObject());
-			
-			SpawnTransform.SetRotation(cube->GetRotation(GetCapsuleComponent()->GetComponentLocation(), SpawnTransform.GetLocation()));
+
+			SpawnTransform.SetRotation(cube->GetRotation(GetCapsuleComponent()->GetComponentLocation(),
+			                                             SpawnTransform.GetLocation()));
 
 			cube = GetWorld()->SpawnActor<ABlockBox>(BlueprintActorToSpawn[selectedBox], SpawnTransform);
 			cube->FinishSpawning(SpawnTransform);
@@ -232,7 +238,8 @@ void ABlockGameCharacter::SpawnBox()
 			UBlockGameInstance* gi = Cast<UBlockGameInstance>(UGameplayStatics::GetGameInstance(this));
 
 			check(gi);
-			gi->AddBox(FBlockData(BlueprintActorToSpawn[selectedBox], SpawnTransform.GetLocation(),SpawnTransform.Rotator()));
+			gi->AddBox(FBlockData(BlueprintActorToSpawn[selectedBox], SpawnTransform.GetLocation(),
+			                      SpawnTransform.Rotator()));
 			gi->AutoSave();
 		}
 	}
@@ -287,11 +294,13 @@ void ABlockGameCharacter::SaveGame()
 void ABlockGameCharacter::Heal()
 {
 	health++;
+	HealthWidget->SetHealth(health);
 	UKismetSystemLibrary::PrintString(this, "health: " + FString::FromInt(health));
 };
 
 void ABlockGameCharacter::Damage()
 {
-	health-=11;
+	health -= 11;
+	HealthWidget->SetHealth(health);
 	UKismetSystemLibrary::PrintString(this, "health: " + FString::FromInt(health));
 };

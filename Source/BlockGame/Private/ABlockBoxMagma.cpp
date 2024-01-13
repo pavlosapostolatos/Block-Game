@@ -38,7 +38,7 @@ void ABlockBoxMagma::NotifyOverLap(
 
 	// Set the timer with the specified delay and the delegate
 	// GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, 3, false);
-	GetWorldTimerManager().SetTimer(TimerHandle, Character, event, 3, true);
+	GetWorldTimerManager().SetTimer(TimerHandle, Character, event, 1, true);
 
 }
 
@@ -62,6 +62,6 @@ void ABlockBoxMagma::NotifyEndHit(
 
 	// Set the timer with the specified delay and the delegate
 	// GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, 3, false);
-	GetWorldTimerManager().ClearTimer( TimerHandle_LifeSpanExpired );		
+	GetWorldTimerManager().ClearTimer( TimerHandle );		
 
 }
