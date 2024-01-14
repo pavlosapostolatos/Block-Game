@@ -1,8 +1,8 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "ABlockBoxMagma.h"
-#include "ABlockBoxHeal.generated.h"
+#include "BlockBoxMagma.h"
+#include "BlockBoxHeal.generated.h"
 
 UCLASS()
 class BLOCKGAME_API ABlockBoxHeal : public ABlockBoxMagma

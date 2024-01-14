@@ -4,20 +4,23 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "HealthWidget.generated.h"
+#include "MyHealthWidget.generated.h"
 
-/**
- * 
- */
 UCLASS()
-class BLOCKGAME_API UHealthWidget : public UUserWidget
+class BLOCKGAME_API UMyHealthWidget : public UUserWidget
 {
+public:
+
+
+private:
 	GENERATED_BODY()
-	
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Text, meta = (AllowPrivateAccess = "true"))
 	int health;
 
 public:
+	// UMyHealthWidget() = default;
+	
 	[[nodiscard]] int Health() const
 	{
 		return health;

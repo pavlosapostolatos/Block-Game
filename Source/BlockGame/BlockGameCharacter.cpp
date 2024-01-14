@@ -4,7 +4,7 @@
 
 #include "BlockBoxInteractive.h"
 #include "BlockGameInstance.h"
-#include "Public\BlockBox.h"
+#include "BlockBox.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -75,7 +75,7 @@ void ABlockGameCharacter::BeginPlay()
 		}
 	}
 
-	HealthWidget = CreateWidget<UHealthWidget>(GetWorld(), C_HealthWidget);
+	HealthWidget = CreateWidget<UMyHealthWidget>(GetWorld(), C_HealthWidget);
 	HealthWidget->SetHealth(health);
 	HealthWidget->AddToViewport();
 }

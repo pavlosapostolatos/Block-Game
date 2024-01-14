@@ -4,7 +4,7 @@
 #include "BlockBox.h"
 #include "BlockGame/BlockGameCharacter.h"
 #include "Components/BoxComponent.h"
-#include "ABlockBoxMagma.generated.h"
+#include "BlockBoxMagma.generated.h"
 
 UCLASS()
 class BLOCKGAME_API ABlockBoxMagma : public ABlockBox
