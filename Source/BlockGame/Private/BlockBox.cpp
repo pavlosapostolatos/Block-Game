@@ -10,7 +10,7 @@
 // Sets default values
 ABlockBox::ABlockBox()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot"));
 
@@ -22,17 +22,19 @@ ABlockBox::ABlockBox()
 void ABlockBox::BeginPlay()
 {
 	Super::BeginPlay();
-	UMaterialInstanceDynamic* DynMaterial = UMaterialInstanceDynamic::Create(BlockMaterial, nullptr);
-	// //
-	DynMaterial->SetScalarParameterValue("Size", 3.0);
-	DynMaterial->SetScalarParameterValue("DestroyAmount", 0.0);
-	//
-	SM_Block->SetMaterial(0,DynMaterial);
+	int i=-1;
+	for (UMaterialInterface* MI : SM_Block->GetMaterials())
+	{
+		i++;
+		UMaterialInstanceDynamic* DynMaterial = UMaterialInstanceDynamic::Create(MI, nullptr);
+		SM_Block->SetMaterial(i, DynMaterial);
+	}
 }
 
 void ABlockBox::UpdateMaterialDestruction(float destroyAmount)
 {
-	Cast<UMaterialInstanceDynamic>(SM_Block->GetMaterial(0))->SetScalarParameterValue("DestroyAmount", destroyAmount);
+	for (UMaterialInterface* MI : SM_Block->GetMaterials())
+		Cast<UMaterialInstanceDynamic>(MI)->SetScalarParameterValue("DestroyAmount", destroyAmount);
 }
 
 // Called every frame
@@ -44,12 +46,12 @@ void ABlockBox::Tick(float DeltaTime)
 
 void ABlockBox::DestroyBox()
 {
-	destroyData.bLerping=true;
+	destroyData.bLerping = true;
 	UBlockGameInstance* gi = Cast<UBlockGameInstance>(UGameplayStatics::GetGameInstance(this));
 
 	check(gi);
-	gi->DeleteBox(FBlockData(TSubclassOf<ABlockBox>(GetClass()), GetActorLocation(),GetActorRotation()));
-	gi->AutoSave();//Waiting for the destroyData timer to end is overkill here
+	gi->DeleteBox(FBlockData(TSubclassOf<ABlockBox>(GetClass()), GetActorLocation(), GetActorRotation()));
+	gi->AutoSave(); //Waiting for the destroyData timer to end is overkill here
 }
 
 void ABlockBox::DestroyBox(float DeltaTime)
@@ -77,13 +79,12 @@ void ABlockBox::DestroyBox(float DeltaTime)
 			destroyData.LerpAmount = FMath::Lerp(destroyData.StartValue, destroyData.EndValue, Alpha);
 			UKismetSystemLibrary::PrintString(this, FString::SanitizeFloat(destroyData.LerpAmount));
 			UpdateMaterialDestruction(destroyData.LerpAmount);
-// Call function or perform action for update
+			// Call function or perform action for update
 		}
 	}
 }
 
-UE::Math::TQuat<double> ABlockBox::GetRotation(FVector originLocation,FVector SpawnLocation)
+UE::Math::TQuat<double> ABlockBox::GetRotation(FVector originLocation, FVector SpawnLocation)
 {
-	return UE::Math::TQuat(0.0,0.0,0.0,0.0);
+	return UE::Math::TQuat(0.0, 0.0, 0.0, 0.0);
 }
-

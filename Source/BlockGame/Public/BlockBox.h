@@ -13,7 +13,8 @@ UCLASS()
 class BLOCKGAME_API ABlockBox : public AActor
 {
 	GENERATED_BODY()
-	
+
+	// DEPRECATED
 	UPROPERTY(EditAnywhere, Category=Mesh)
 	UMaterialInterface* BlockMaterial;
 	
