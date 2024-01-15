@@ -23,4 +23,7 @@ private:
 
 public:
 	void ActivateSlot(int Index);
+
+	UFUNCTION(BlueprintCallable)
+	void SetUp(TArray<FInventory>& Inventory);
 };

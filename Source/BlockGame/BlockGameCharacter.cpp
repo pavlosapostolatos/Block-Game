@@ -79,6 +79,7 @@ void ABlockGameCharacter::BeginPlay()
 	MainHud = CreateWidget<UMyMainHud>(GetWorld(), C_MainHud);
 	MainHud->Construct();
 	MainHud->GetHealthWidget()->SetHealth(health);
+	MainHud->GetToolbar()->SetUp(Inventory);
 	MainHud->AddToViewport();
 }
 
