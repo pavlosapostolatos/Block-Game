@@ -22,6 +22,12 @@ ABlockBox::ABlockBox()
 void ABlockBox::BeginPlay()
 {
 	Super::BeginPlay();
+	// UMaterialInstanceDynamic* DynMaterial = UMaterialInstanceDynamic::Create(BlockMaterial, nullptr);
+	// // //
+	// DynMaterial->SetScalarParameterValue("Size", 3.0);
+	// DynMaterial->SetScalarParameterValue("DestroyAmount", 0.0);
+	// //
+	// SM_Block->SetMaterial(0,DynMaterial);
 	int i=-1;
 	for (UMaterialInterface* MI : SM_Block->GetMaterials())
 	{
