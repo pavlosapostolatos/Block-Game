@@ -19,6 +19,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Utils/Utils.h"
+#include "MyHealthWidget.h"
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 //////////////////////////////////////////////////////////////////////////
@@ -75,9 +76,10 @@ void ABlockGameCharacter::BeginPlay()
 		}
 	}
 
-	HealthWidget = CreateWidget<UMyHealthWidget>(GetWorld(), C_HealthWidget);
-	HealthWidget->SetHealth(health);
-	HealthWidget->AddToViewport();
+	MainHud = CreateWidget<UMyMainHud>(GetWorld(), C_MainHud);
+	MainHud->Construct();
+	MainHud->GetHealthWidget()->SetHealth(health);
+	MainHud->AddToViewport();
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
@@ -294,13 +296,13 @@ void ABlockGameCharacter::SaveGame()
 void ABlockGameCharacter::Heal()
 {
 	health++;
-	HealthWidget->SetHealth(health);
+	MainHud->GetHealthWidget()->SetHealth(health);
 	UKismetSystemLibrary::PrintString(this, "health: " + FString::FromInt(health));
 };
 
 void ABlockGameCharacter::Damage()
 {
 	health -= 11;
-	HealthWidget->SetHealth(health);
+	MainHud->GetHealthWidget()->SetHealth(health);
 	UKismetSystemLibrary::PrintString(this, "health: " + FString::FromInt(health));
 };

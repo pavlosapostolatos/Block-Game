@@ -3,9 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MyHealthWidget.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "Widgets/MainHud.h"
 #include "BlockGameCharacter.generated.h"
 
 class UInputComponent;
@@ -31,7 +31,7 @@ class ABlockGameCharacter : public ACharacter
 	UStaticMeshComponent* BlockOutline;
 
 	UPROPERTY(VisibleDefaultsOnly, Category=Widget)
-	UMyHealthWidget* HealthWidget;
+	UMyMainHud* MainHud;
 
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -160,7 +160,7 @@ public:
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Widget)
-	TSubclassOf<UMyHealthWidget> C_HealthWidget;
+	TSubclassOf<UMyMainHud> C_MainHud;
 
 	UFUNCTION(BlueprintCallable)
 	virtual void SpawnBox();
