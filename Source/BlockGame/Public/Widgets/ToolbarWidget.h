@@ -15,9 +15,9 @@ public:
 private:
 	GENERATED_BODY()
 
-	UPROPERTY(BlueprintReadWrite , meta=(AllowPrivateAccess))
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	USlotWidget* ActiveSlot;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Text, meta = (AllowPrivateAccess = "true"))
 	TArray<USlotWidget*> Slots;
 
@@ -26,4 +26,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetUp(TArray<FInventory>& Inventory);
+
+	void ConstructAll();
 };

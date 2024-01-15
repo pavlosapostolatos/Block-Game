@@ -77,7 +77,7 @@ void ABlockGameCharacter::BeginPlay()
 	}
 
 	MainHud = CreateWidget<UMyMainHud>(GetWorld(), C_MainHud);
-	MainHud->Construct();
+	MainHud->ConstructAll();
 	MainHud->GetHealthWidget()->SetHealth(health);
 	MainHud->GetToolbar()->SetUp(Inventory);
 	MainHud->AddToViewport();
@@ -130,9 +130,9 @@ void ABlockGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 
 		InputComponent->BindKey(EKeys::Z, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::SaveGame);
 
-		InputComponent->BindKey(EKeys::MouseScrollDown, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::selectRight);
+		InputComponent->BindKey(EKeys::MouseScrollDown, EInputEvent::IE_Pressed, this,
+		                        &ABlockGameCharacter::selectRight);
 		InputComponent->BindKey(EKeys::MouseScrollUp, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::selectLeft);
-
 	}
 	else
 	{

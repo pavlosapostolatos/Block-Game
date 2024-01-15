@@ -40,5 +40,6 @@ public:
 	{
 		this->Toolbar = Widget;
 	}
-
+	
+	void ConstructAll();
 };
