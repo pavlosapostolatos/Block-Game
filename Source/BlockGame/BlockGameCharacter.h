@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "Structs/Inventory.h"
 #include "Widgets/MainHud.h"
 #include "BlockGameCharacter.generated.h"
 
@@ -147,7 +148,7 @@ public:
 	UBlueprint* actorToSpawn;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<TSubclassOf<class ABlockBox>> BlueprintActorToSpawn;
+	TArray<FInventory> Inventory;
 	//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UClass* test; //the correct way to do this shit

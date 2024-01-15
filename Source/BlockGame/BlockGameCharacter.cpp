@@ -222,25 +222,25 @@ void ABlockGameCharacter::SpawnBox()
 		{
 			interactiveBox->Interact();
 		}
-		else if (BlueprintActorToSpawn.IsEmpty())
+		else if (Inventory.IsEmpty())
 		{
 			SpawnStaticMesh(SpawnTransform);
 		}
 		else
 		{
 			if (checkBoxOverlap(this, SpawnTransform)) return;
-			ABlockBox* cube = Cast<ABlockBox>(BlueprintActorToSpawn[selectedBox]->GetDefaultObject());
+			ABlockBox* cube = Cast<ABlockBox>(Inventory[selectedBox].C_Box->GetDefaultObject());
 
 			SpawnTransform.SetRotation(cube->GetRotation(GetCapsuleComponent()->GetComponentLocation(),
 			                                             SpawnTransform.GetLocation()));
 
-			cube = GetWorld()->SpawnActor<ABlockBox>(BlueprintActorToSpawn[selectedBox], SpawnTransform);
+			cube = GetWorld()->SpawnActor<ABlockBox>(Inventory[selectedBox].C_Box, SpawnTransform);
 			cube->FinishSpawning(SpawnTransform);
 
 			UBlockGameInstance* gi = Cast<UBlockGameInstance>(UGameplayStatics::GetGameInstance(this));
 
 			check(gi);
-			gi->AddBox(FBlockData(BlueprintActorToSpawn[selectedBox], SpawnTransform.GetLocation(),
+			gi->AddBox(FBlockData(Inventory[selectedBox].C_Box, SpawnTransform.GetLocation(),
 			                      SpawnTransform.Rotator()));
 			gi->AutoSave();
 		}
