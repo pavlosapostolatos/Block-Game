@@ -128,6 +128,10 @@ void ABlockGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		                        &ABlockGameCharacter::selectStair);
 
 		InputComponent->BindKey(EKeys::Z, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::SaveGame);
+
+		InputComponent->BindKey(EKeys::MouseScrollDown, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::selectRight);
+		InputComponent->BindKey(EKeys::MouseScrollUp, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::selectLeft);
+
 	}
 	else
 	{

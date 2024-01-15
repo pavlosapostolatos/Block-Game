@@ -69,31 +69,51 @@ class ABlockGameCharacter : public ACharacter
 	void selectWhite()
 	{
 		selectedBox = 0;
+		MainHud->GetToolbar()->ActivateSlot(selectedBox);
 	};
 
 	void selectRed()
 	{
 		selectedBox = 1;
+		MainHud->GetToolbar()->ActivateSlot(selectedBox);
 	};
 
 	void selectGreen()
 	{
 		selectedBox = 2;
+		MainHud->GetToolbar()->ActivateSlot(selectedBox);
 	};
 
 	void selectChest()
 	{
 		selectedBox = 3;
+		MainHud->GetToolbar()->ActivateSlot(selectedBox);
 	};
 
 	void selectLamp()
 	{
 		selectedBox = 4;
+		MainHud->GetToolbar()->ActivateSlot(selectedBox);
 	};
 
 	void selectStair()
 	{
 		selectedBox = 5;
+		MainHud->GetToolbar()->ActivateSlot(selectedBox);
+	};
+
+
+	void selectRight()
+	{
+		selectedBox= (selectedBox +1) % Inventory.Num() ;
+		MainHud->GetToolbar()->ActivateSlot(selectedBox);
+	};
+
+	
+	void selectLeft()
+	{
+		selectedBox = (selectedBox - 1 + Inventory.Num()) % Inventory.Num();
+		MainHud->GetToolbar()->ActivateSlot(selectedBox);
 	};
 
 public:

@@ -18,4 +18,11 @@ private:
 	int amount;
 
 public:
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void ActivateSlot();
+	
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void DeactivateSlot();
+
 };
