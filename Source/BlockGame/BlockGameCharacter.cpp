@@ -234,6 +234,7 @@ void ABlockGameCharacter::SpawnBox()
 		else
 		{
 			if (checkBoxOverlap(this, SpawnTransform)) return;
+			if (!Inventory[selectedBox].Amount) return;
 			ABlockBox* cube = Cast<ABlockBox>(Inventory[selectedBox].C_Box->GetDefaultObject());
 
 			SpawnTransform.SetRotation(cube->GetRotation(GetCapsuleComponent()->GetComponentLocation(),
@@ -247,6 +248,7 @@ void ABlockGameCharacter::SpawnBox()
 			check(gi);
 			gi->AddBox(FBlockData(Inventory[selectedBox].C_Box, SpawnTransform.GetLocation(),
 			                      SpawnTransform.Rotator()));
+			MainHud->GetToolbar()->SetSlotAmount(selectedBox, --Inventory[selectedBox].Amount);
 			gi->AutoSave();
 		}
 	}
@@ -288,6 +290,15 @@ void ABlockGameCharacter::DeleteBox()
 	if (collided && Cast<ABlockBox>(hit.GetActor()))
 	{
 		UKismetSystemLibrary::PrintString(this, hit.GetActor()->GetActorNameOrLabel());
+	
+		for (int i = 0; i < Inventory.Num(); ++i)
+		{
+			if(hit.GetActor()->GetClass() == Inventory[i].C_Box )
+			{
+				MainHud->GetToolbar()->SetSlotAmount(i, ++Inventory[i].Amount);
+			}
+		}
+		
 		Cast<ABlockBox>(hit.GetActor())->DestroyBox();
 	}
 }

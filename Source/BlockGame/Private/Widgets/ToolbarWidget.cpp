@@ -9,13 +9,6 @@ void UToolbarWidget::ConstructAll()
 	}
 }
 
-void UToolbarWidget::ActivateSlot(int Index)
-{
-	ActiveSlot->DeactivateSlot();
-	ActiveSlot = Slots[Index];
-	ActiveSlot->ActivateSlot();
-}
-
 void UToolbarWidget::SetUp(TArray<FInventory>& Inventory)
 {
 	const int Limit = std::min(Slots.Num(), Inventory.Num());
@@ -24,3 +17,17 @@ void UToolbarWidget::SetUp(TArray<FInventory>& Inventory)
 		Slots[i]->SetUp(Inventory[i]);
 	}
 }
+
+void UToolbarWidget::ActivateSlot(int Index)
+{
+	ActiveSlot->DeactivateSlot();
+	ActiveSlot = Slots[Index];
+	ActiveSlot->ActivateSlot();
+}
+
+void UToolbarWidget::SetSlotAmount(int Index, int Amount)
+{
+	Slots[Index]->GiveAmount(Amount);
+}
+
+
