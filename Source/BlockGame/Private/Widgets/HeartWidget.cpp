@@ -11,7 +11,7 @@ void UHeartWidget::SetHealth(int Health)
 	Health = std::min(Health, SafeMaxPlayerHealth);
 	const int FullHeartStep = SafeMaxPlayerHealth / Hearts.Num();
 
-	int FullHearts = Health / FullHeartStep + Health % FullHeartStep > 0.5f * FullHeartStep;
+	int FullHearts = Health / FullHeartStep + (Health % FullHeartStep > 0.5f * FullHeartStep);
 	bool isHalfHeart = Health % FullHeartStep && Health % FullHeartStep < 0.5f * FullHeartStep;
 
 	int i;

@@ -314,12 +314,13 @@ void ABlockGameCharacter::Heal()
 {
 	health++;
 	MainHud->GetHealthWidget()->SetHealth(health);
+	MainHud->GetHeartWidget()->SetHealth(health);
 	UKismetSystemLibrary::PrintString(this, "health: " + FString::FromInt(health));
 };
 
 void ABlockGameCharacter::Damage()
 {
 	health -= 11;
-	MainHud->GetHealthWidget()->SetHealth(health);
+	MainHud->GetHeartWidget()->SetHealth(health);
 	UKismetSystemLibrary::PrintString(this, "health: " + FString::FromInt(health));
 };
