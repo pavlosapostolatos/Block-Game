@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "MyHealthWidget.h"
+#include "HeartWidget.h"
 #include "ToolbarWidget.h"
 #include "MainHud.generated.h"
 
@@ -16,6 +17,9 @@ private:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Text, meta = (AllowPrivateAccess = "true"))
 	UMyHealthWidget* HealthWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Text, meta = (AllowPrivateAccess = "true"))
+	UHeartWidget* HeartWidget;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Text, meta = (AllowPrivateAccess = "true"))
 	UToolbarWidget* Toolbar;
@@ -39,6 +43,16 @@ public:
 	void SetToolbar(UToolbarWidget* Widget)
 	{
 		this->Toolbar = Widget;
+	}
+
+	[[nodiscard]] UHeartWidget* GetHeartWidget() const
+	{
+		return HeartWidget;
+	}
+
+	void SetHeartWidget(UHeartWidget* newHeartWidget)
+	{
+		this->HeartWidget = newHeartWidget;
 	}
 	
 	void ConstructAll();

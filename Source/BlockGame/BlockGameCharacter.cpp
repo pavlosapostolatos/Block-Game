@@ -79,6 +79,7 @@ void ABlockGameCharacter::BeginPlay()
 	MainHud = CreateWidget<UMyMainHud>(GetWorld(), C_MainHud);
 	MainHud->ConstructAll();
 	MainHud->GetHealthWidget()->SetHealth(health);
+	MainHud->GetHeartWidget()->SetHealth(health);
 	MainHud->GetToolbar()->SetUp(Inventory);
 	MainHud->AddToViewport();
 }
@@ -290,15 +291,15 @@ void ABlockGameCharacter::DeleteBox()
 	if (collided && Cast<ABlockBox>(hit.GetActor()))
 	{
 		UKismetSystemLibrary::PrintString(this, hit.GetActor()->GetActorNameOrLabel());
-	
+
 		for (int i = 0; i < Inventory.Num(); ++i)
 		{
-			if(hit.GetActor()->GetClass() == Inventory[i].C_Box )
+			if (hit.GetActor()->GetClass() == Inventory[i].C_Box)
 			{
 				MainHud->GetToolbar()->SetSlotAmount(i, ++Inventory[i].Amount);
 			}
 		}
-		
+
 		Cast<ABlockBox>(hit.GetActor())->DestroyBox();
 	}
 }
