@@ -84,7 +84,7 @@ void ABlockGameCharacter::BeginPlay()
 	MainHud->GetToolbar()->SetUp(Inventory);
 	MainHud->AddToViewport();
 
-	selectWhite();
+	SelectKey(EKeys::One);
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
@@ -113,30 +113,18 @@ void ABlockGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		                                   &ABlockGameCharacter::DeleteBox);
 
 
-		InputComponent->BindKey(EKeys::One, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::selectWhite);
-		InputComponent->BindKey(EKeys::Gamepad_FaceButton_Top, EInputEvent::IE_Pressed, this,
-		                        &ABlockGameCharacter::selectWhite);
-		InputComponent->BindKey(EKeys::Two, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::selectRed);
-		InputComponent->BindKey(EKeys::Gamepad_FaceButton_Left, EInputEvent::IE_Pressed, this,
-		                        &ABlockGameCharacter::selectRed);
-		InputComponent->BindKey(EKeys::Three, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::selectGreen);
-		InputComponent->BindKey(EKeys::Gamepad_FaceButton_Bottom, EInputEvent::IE_Pressed, this,
-		                        &ABlockGameCharacter::selectGreen);
-		InputComponent->BindKey(EKeys::Four, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::selectChest);
-		InputComponent->BindKey(EKeys::Gamepad_FaceButton_Right, EInputEvent::IE_Pressed, this,
-		                        &ABlockGameCharacter::selectChest);
-		InputComponent->BindKey(EKeys::Five, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::selectLamp);
-		InputComponent->BindKey(EKeys::Gamepad_DPad_Up, EInputEvent::IE_Pressed, this,
-		                        &ABlockGameCharacter::selectLamp);
-		InputComponent->BindKey(EKeys::Six, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::selectStair);
-		InputComponent->BindKey(EKeys::Gamepad_DPad_Down, EInputEvent::IE_Pressed, this,
-		                        &ABlockGameCharacter::selectStair);
-
-		InputComponent->BindKey(EKeys::Z, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::SaveGame);
-
-		InputComponent->BindKey(EKeys::MouseScrollDown, EInputEvent::IE_Pressed, this,
-		                        &ABlockGameCharacter::selectRight);
+		InputComponent->BindKey(EKeys::One, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::SelectKey);
+		InputComponent->BindKey(EKeys::Two, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::SelectKey);
+		InputComponent->BindKey(EKeys::Three, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::SelectKey);
+		InputComponent->BindKey(EKeys::Four, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::SelectKey);
+		InputComponent->BindKey(EKeys::Five, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::SelectKey);
+		InputComponent->BindKey(EKeys::Six, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::SelectKey);
+		InputComponent->BindKey(EKeys::Seven, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::SelectKey);
+		InputComponent->BindKey(EKeys::MouseScrollDown, EInputEvent::IE_Pressed, this,&ABlockGameCharacter::selectRight);
 		InputComponent->BindKey(EKeys::MouseScrollUp, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::selectLeft);
+		InputComponent->BindKey(EKeys::Gamepad_DPad_Left, EInputEvent::IE_Pressed, this,&ABlockGameCharacter::selectLeft);
+		InputComponent->BindKey(EKeys::Gamepad_DPad_Left, EInputEvent::IE_Pressed, this,&ABlockGameCharacter::selectRight);
+		InputComponent->BindKey(EKeys::Z, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::SaveGame);
 	}
 	else
 	{
@@ -147,6 +135,29 @@ void ABlockGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	}
 }
 
+void ABlockGameCharacter::Select()
+{
+
+	//BLOCK MODE TO WEAPON MODE
+	if (WeaponComponent == nullptr && Inventory[selectedBox].Type == InventoryType::WEAPON)
+	{
+		WeaponComponent = Cast<UTP_WeaponComponent>(AddComponentByClass(Inventory[selectedBox].C_WeaponComponent, false, FTransform::Identity, false));
+		WeaponComponent->AttachWeapon(this);
+		GetMesh1P()->SetVisibility(true);
+	}
+
+
+	// WEAPON MODE TO BLOCK MODE
+	if (WeaponComponent != nullptr && Inventory[selectedBox].Type == InventoryType::BLOCK)
+	{
+		WeaponComponent->DestroyComponent();
+		WeaponComponent = nullptr;
+		bHasRifle = false;
+		GetMesh1P()->SetVisibility(false);
+	}
+	
+	MainHud->GetToolbar()->ActivateSlot(selectedBox);
+}
 
 void ABlockGameCharacter::Move(const FInputActionValue& Value)
 {
