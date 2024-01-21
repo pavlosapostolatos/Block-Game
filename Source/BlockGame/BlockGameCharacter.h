@@ -67,52 +67,15 @@ class ABlockGameCharacter : public ACharacter
 
 	uint8 selectedBox : 3 = 0;
 
-	void Select()
+	void Select();
+
+	void SelectKey(FKey PressedKey)
 	{
-		if (Inventory[selectedBox].Type == InventoryType::WEAPON)
-		{
-			WeaponComponent = Cast<UTP_WeaponComponent>(AddComponentByClass(Inventory[selectedBox].C_WeaponComponent, false, FTransform::Identity, false));
-		}
-		WeaponComponent->AttachWeapon(this);
-		MainHud->GetToolbar()->ActivateSlot(selectedBox);
+		// Do something with the pressed key
+		FString KeyName = PressedKey.GetDisplayName().ToString();
+		selectedBox = FCString::Atoi(*KeyName) - 1;
+		Select();
 	}
-
-	void selectWhite()
-	{
-		selectedBox = 0;
-		Select();
-	};
-
-	void selectRed()
-	{
-		selectedBox = 1;
-		Select();
-	};
-
-	void selectGreen()
-	{
-		selectedBox = 2;
-		Select();
-	};
-
-	void selectChest()
-	{
-		selectedBox = 3;
-		Select();
-	};
-
-	void selectLamp()
-	{
-		selectedBox = 4;
-		Select();
-	};
-
-	void selectStair()
-	{
-		selectedBox = 5;
-		Select();
-	};
-
 
 	void selectRight()
 	{
@@ -189,9 +152,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UTP_WeaponComponent* WeaponComponent;
-
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	// TSubclassOf<class UTP_WeaponComponent> C_WeaponComponent;
 
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/
