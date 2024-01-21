@@ -36,6 +36,9 @@ public:
 		Amount = newAmount;
 	}
 
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void HideAmount();
+	
 	UFUNCTION(BlueprintCallable)
 	void SetUp(FInventory& Inventory);
 };

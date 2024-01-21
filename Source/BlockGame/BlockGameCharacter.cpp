@@ -239,6 +239,8 @@ void ABlockGameCharacter::SpawnBox()
 		{
 			if (checkBoxOverlap(this, SpawnTransform)) return;
 			if (!Inventory[selectedBox].Amount) return;
+			if (Inventory[selectedBox].Type != InventoryType::BLOCK) return;
+
 			ABlockBox* cube = Cast<ABlockBox>(Inventory[selectedBox].C_Box->GetDefaultObject());
 
 			SpawnTransform.SetRotation(cube->GetRotation(GetCapsuleComponent()->GetComponentLocation(),
