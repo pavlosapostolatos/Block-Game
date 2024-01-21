@@ -20,6 +20,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Utils/Utils.h"
 #include "MyHealthWidget.h"
+#include "TP_WeaponComponent.h"
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 //////////////////////////////////////////////////////////////////////////
@@ -82,6 +83,8 @@ void ABlockGameCharacter::BeginPlay()
 	MainHud->GetHeartWidget()->SetHealth(health);
 	MainHud->GetToolbar()->SetUp(Inventory);
 	MainHud->AddToViewport();
+
+	selectWhite();
 }
 
 //////////////////////////////////////////////////////////////////////////// Input

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "TP_WeaponComponent.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "Structs/Inventory.h"
@@ -66,54 +67,64 @@ class ABlockGameCharacter : public ACharacter
 
 	uint8 selectedBox : 3 = 0;
 
+	void Select()
+	{
+		if (Inventory[selectedBox].Type == InventoryType::WEAPON)
+		{
+			WeaponComponent = Cast<UTP_WeaponComponent>(AddComponentByClass(Inventory[selectedBox].C_WeaponComponent, false, FTransform::Identity, false));
+		}
+		WeaponComponent->AttachWeapon(this);
+		MainHud->GetToolbar()->ActivateSlot(selectedBox);
+	}
+
 	void selectWhite()
 	{
 		selectedBox = 0;
-		MainHud->GetToolbar()->ActivateSlot(selectedBox);
+		Select();
 	};
 
 	void selectRed()
 	{
 		selectedBox = 1;
-		MainHud->GetToolbar()->ActivateSlot(selectedBox);
+		Select();
 	};
 
 	void selectGreen()
 	{
 		selectedBox = 2;
-		MainHud->GetToolbar()->ActivateSlot(selectedBox);
+		Select();
 	};
 
 	void selectChest()
 	{
 		selectedBox = 3;
-		MainHud->GetToolbar()->ActivateSlot(selectedBox);
+		Select();
 	};
 
 	void selectLamp()
 	{
 		selectedBox = 4;
-		MainHud->GetToolbar()->ActivateSlot(selectedBox);
+		Select();
 	};
 
 	void selectStair()
 	{
 		selectedBox = 5;
-		MainHud->GetToolbar()->ActivateSlot(selectedBox);
+		Select();
 	};
 
 
 	void selectRight()
 	{
-		selectedBox= (selectedBox +1) % Inventory.Num() ;
-		MainHud->GetToolbar()->ActivateSlot(selectedBox);
+		selectedBox = (selectedBox + 1) % Inventory.Num();
+		Select();
 	};
 
-	
+
 	void selectLeft()
 	{
 		selectedBox = (selectedBox - 1 + Inventory.Num()) % Inventory.Num();
-		MainHud->GetToolbar()->ActivateSlot(selectedBox);
+		Select();
 	};
 
 public:
@@ -175,6 +186,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMesh* SM_BlockOutline;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UTP_WeaponComponent* WeaponComponent;
+
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	// TSubclassOf<class UTP_WeaponComponent> C_WeaponComponent;
 
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/
