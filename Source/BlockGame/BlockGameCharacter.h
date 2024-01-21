@@ -183,6 +183,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Widget)
 	TSubclassOf<UMyMainHud> C_MainHud;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Widget)
+	TSubclassOf<UUserWidget> C_DeathHud;
+
 	UFUNCTION(BlueprintCallable)
 	virtual void SpawnBox();
 

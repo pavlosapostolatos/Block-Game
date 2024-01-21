@@ -321,6 +321,14 @@ void ABlockGameCharacter::Heal()
 void ABlockGameCharacter::Damage()
 {
 	health -= 11;
+	if (health <= 0)
+	{
+		DisableInput(UGameplayStatics::GetPlayerController(this, 0));
+		UUserWidget* DeathWidget = CreateWidget<UUserWidget>(GetWorld(), C_DeathHud);
+		DeathWidget->AddToViewport();
+	}
+
+	MainHud->GetHealthWidget()->SetHealth(health);
 	MainHud->GetHeartWidget()->SetHealth(health);
 	UKismetSystemLibrary::PrintString(this, "health: " + FString::FromInt(health));
 };
