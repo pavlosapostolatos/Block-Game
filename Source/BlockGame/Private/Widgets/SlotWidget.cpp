@@ -3,5 +3,12 @@
 void USlotWidget::SetUp(FInventory& Inventory)
 {
 	Icon->SetBrushFromTexture(Inventory.Icon);
-	GiveAmount(Inventory.Amount);
+	if(Inventory.Type != InventoryType::BLOCK)
+	{
+		HideAmount();
+	}
+	else
+	{
+		GiveAmount(Inventory.Amount);
+	}
 }
