@@ -49,7 +49,7 @@ ABlockGameCharacter::ABlockGameCharacter()
 	Mesh1P->bCastDynamicShadow = false;
 	Mesh1P->CastShadow = false;
 	Mesh1P->SetRelativeLocation(SheathWeaponLocation);
-	Mesh1P->SetRelativeRotation(FRotator(5, 2, 20));
+	// Mesh1P->SetRelativeRotation(FRotator(5, 2, 20));
 
 	BlockOutline = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BlockOutline"));
 	BlockOutline->SetupAttachment(GetCapsuleComponent());
@@ -144,9 +144,7 @@ void ABlockGameCharacter::Select()
 	//BLOCK MODE TO WEAPON MODE
 	if (WeaponComponent == nullptr && Inventory[selectedBox].Type == InventoryType::WEAPON)
 	{
-		EquipLerpData.direction = 1;
-		EquipLerpData.bLerping = true;
-		EquipLerpData.FinishFunction.BindRaw(this, &ABlockGameCharacter::FinishEquipWeapon);
+		EquipWeapon();
 		// EquipWeapon();
 	}
 
@@ -156,7 +154,7 @@ void ABlockGameCharacter::Select()
 		// UnEquipWeapon();
 		EquipLerpData.direction = -1;
 		EquipLerpData.bLerping = true;
-		EquipLerpData.FinishFunction.BindRaw(this, &ABlockGameCharacter::FinishUnEquipWeapon);
+		EquipLerpData.FinishFunction.BindUObject(this, &ABlockGameCharacter::FinishUnEquipWeapon);
 	}
 
 	// WEAPON MODE TO WEAPON MODE
@@ -164,10 +162,18 @@ void ABlockGameCharacter::Select()
 	{
 		EquipLerpData.direction = -1;
 		EquipLerpData.bLerping = true;
-		EquipLerpData.FinishFunction.BindRaw(this, &ABlockGameCharacter::SwitchWeapon);
+		EquipLerpData.FinishFunction.BindUObject(this, &ABlockGameCharacter::SwitchWeapon);
 	}
 
 	MainHud->GetToolbar()->ActivateSlot(selectedBox);
+}
+
+void ABlockGameCharacter::EquipWeapon()
+{
+	EquipLerpData.direction = 1;
+	EquipLerpData.bLerping = true;
+	EquipLerpData.FinishFunction.Unbind();
+	FinishEquipWeapon();
 }
 
 void ABlockGameCharacter::FinishEquipWeapon()
@@ -190,10 +196,7 @@ void ABlockGameCharacter::FinishUnEquipWeapon()
 void ABlockGameCharacter::SwitchWeapon()
 {
 	FinishUnEquipWeapon();
-	EquipLerpData.direction = 1;
-	EquipLerpData.bLerping = true;
-	EquipLerpData.FinishFunction.Unbind();
-	FinishEquipWeapon();
+	EquipWeapon();
 }
 
 void ABlockGameCharacter::Move(const FInputActionValue& Value)
