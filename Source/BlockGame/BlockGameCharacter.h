@@ -29,7 +29,7 @@ class ABlockGameCharacter : public ACharacter
 	USkeletalMeshComponent* Mesh1P;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Widget, meta=(AllowPrivateAccess = "true"))
-	FVector EquippedWeaponLocation = FVector(4, -5, -161);
+	FVector EquippedWeaponLocation = FVector(12, -5, -161);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Widget, meta=(AllowPrivateAccess = "true"))
 	FVector SheathWeaponLocation = FVector(-26, 4, -182);
@@ -141,6 +141,7 @@ protected:
 	void SaveGame();
 	// APawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
+	void EquipWeapon();
 	void FinishEquipWeapon();
 	void FinishUnEquipWeapon();
 	void SwitchWeapon();
