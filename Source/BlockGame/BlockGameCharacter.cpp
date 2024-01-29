@@ -30,6 +30,7 @@ ABlockGameCharacter::ABlockGameCharacter()
 {
 	// Character doesnt have a rifle at start
 	bHasRifle = false;
+	EquipLerpData.LerpDuration = 0.5f;
 
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(40.f, 96.0f);
@@ -47,8 +48,8 @@ ABlockGameCharacter::ABlockGameCharacter()
 	Mesh1P->SetupAttachment(FirstPersonCameraComponent);
 	Mesh1P->bCastDynamicShadow = false;
 	Mesh1P->CastShadow = false;
-	//Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
-	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
+	Mesh1P->SetRelativeLocation(SheathWeaponLocation);
+	Mesh1P->SetRelativeRotation(FRotator(5, 2, 20));
 
 	BlockOutline = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BlockOutline"));
 	BlockOutline->SetupAttachment(GetCapsuleComponent());
@@ -120,10 +121,13 @@ void ABlockGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		InputComponent->BindKey(EKeys::Five, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::SelectKey);
 		InputComponent->BindKey(EKeys::Six, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::SelectKey);
 		InputComponent->BindKey(EKeys::Seven, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::SelectKey);
-		InputComponent->BindKey(EKeys::MouseScrollDown, EInputEvent::IE_Pressed, this,&ABlockGameCharacter::selectRight);
+		InputComponent->BindKey(EKeys::MouseScrollDown, EInputEvent::IE_Pressed, this,
+		                        &ABlockGameCharacter::selectRight);
 		InputComponent->BindKey(EKeys::MouseScrollUp, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::selectLeft);
-		InputComponent->BindKey(EKeys::Gamepad_DPad_Left, EInputEvent::IE_Pressed, this,&ABlockGameCharacter::selectLeft);
-		InputComponent->BindKey(EKeys::Gamepad_DPad_Left, EInputEvent::IE_Pressed, this,&ABlockGameCharacter::selectRight);
+		InputComponent->BindKey(EKeys::Gamepad_DPad_Left, EInputEvent::IE_Pressed, this,
+		                        &ABlockGameCharacter::selectLeft);
+		InputComponent->BindKey(EKeys::Gamepad_DPad_Left, EInputEvent::IE_Pressed, this,
+		                        &ABlockGameCharacter::selectRight);
 		InputComponent->BindKey(EKeys::Z, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::SaveGame);
 	}
 	else
@@ -137,26 +141,59 @@ void ABlockGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 
 void ABlockGameCharacter::Select()
 {
-
 	//BLOCK MODE TO WEAPON MODE
 	if (WeaponComponent == nullptr && Inventory[selectedBox].Type == InventoryType::WEAPON)
 	{
-		WeaponComponent = Cast<UTP_WeaponComponent>(AddComponentByClass(Inventory[selectedBox].C_WeaponComponent, false, FTransform::Identity, false));
-		WeaponComponent->AttachWeapon(this);
-		GetMesh1P()->SetVisibility(true);
+		EquipLerpData.direction = 1;
+		EquipLerpData.bLerping = true;
+		EquipLerpData.FinishFunction.BindRaw(this, &ABlockGameCharacter::FinishEquipWeapon);
+		// EquipWeapon();
 	}
-
 
 	// WEAPON MODE TO BLOCK MODE
 	if (WeaponComponent != nullptr && Inventory[selectedBox].Type == InventoryType::BLOCK)
 	{
-		WeaponComponent->DestroyComponent();
-		WeaponComponent = nullptr;
-		bHasRifle = false;
-		GetMesh1P()->SetVisibility(false);
+		// UnEquipWeapon();
+		EquipLerpData.direction = -1;
+		EquipLerpData.bLerping = true;
+		EquipLerpData.FinishFunction.BindRaw(this, &ABlockGameCharacter::FinishUnEquipWeapon);
 	}
-	
+
+	// WEAPON MODE TO WEAPON MODE
+	if (WeaponComponent != nullptr && Inventory[selectedBox].Type == InventoryType::WEAPON)
+	{
+		EquipLerpData.direction = -1;
+		EquipLerpData.bLerping = true;
+		EquipLerpData.FinishFunction.BindRaw(this, &ABlockGameCharacter::SwitchWeapon);
+	}
+
 	MainHud->GetToolbar()->ActivateSlot(selectedBox);
+}
+
+void ABlockGameCharacter::FinishEquipWeapon()
+{
+	WeaponComponent = Cast<UTP_WeaponComponent>(
+		AddComponentByClass(Inventory[selectedBox].C_WeaponComponent, false, FTransform::Identity, false));
+	WeaponComponent->AttachWeapon(this);
+	GetMesh1P()->SetVisibility(true);
+}
+
+void ABlockGameCharacter::FinishUnEquipWeapon()
+{
+	WeaponComponent->DestroyComponent();
+	WeaponComponent = nullptr;
+	bHasRifle = false;
+	GetMesh1P()->SetVisibility(false);
+}
+
+
+void ABlockGameCharacter::SwitchWeapon()
+{
+	FinishUnEquipWeapon();
+	EquipLerpData.direction = 1;
+	EquipLerpData.bLerping = true;
+	EquipLerpData.FinishFunction.Unbind();
+	FinishEquipWeapon();
 }
 
 void ABlockGameCharacter::Move(const FInputActionValue& Value)
@@ -209,6 +246,8 @@ void ABlockGameCharacter::Tick(float DeltaTime)
 	{
 		BlockOutline->SetVisibility(false);
 	}
+
+	LerpWeapon(DeltaTime);
 }
 
 bool ABlockGameCharacter::GetLineTraceFromCharacter(FHitResult& hit) const
@@ -348,3 +387,36 @@ void ABlockGameCharacter::Damage()
 	MainHud->GetHeartWidget()->SetHealth(health);
 	UKismetSystemLibrary::PrintString(this, "health: " + FString::FromInt(health));
 };
+
+void ABlockGameCharacter::LerpWeapon(float DeltaTime)
+{
+	if (!EquipLerpData.bLerping)
+	{
+		// EquipLerpData.LerpTimer = 0.0f;
+		// EquipLerpData.StartValue = 0.0f;
+		// EquipLerpData.EndValue = 1.0f;
+	}
+	if (EquipLerpData.bLerping)
+	{
+		EquipLerpData.LerpTimer = EquipLerpData.LerpTimer + EquipLerpData.direction * DeltaTime;
+
+		if (
+			(EquipLerpData.direction == 1 && EquipLerpData.LerpTimer >= EquipLerpData.LerpDuration) ||
+			(EquipLerpData.direction == -1 && EquipLerpData.LerpTimer < 0.0)
+		)
+		{
+			// EquipLerpData.LerpAmount = EquipLerpData.EndValue;
+			EquipLerpData.bLerping = false;
+			EquipLerpData.FinishFunction.ExecuteIfBound();
+		}
+		else
+		{
+			float Alpha = FMath::Clamp(EquipLerpData.LerpTimer / EquipLerpData.LerpDuration, 0.0f, 1.0f);
+			EquipLerpData.LerpAmount = FMath::Lerp(EquipLerpData.StartValue, EquipLerpData.EndValue, Alpha);
+			UKismetSystemLibrary::PrintString(this, FString::SanitizeFloat(EquipLerpData.LerpAmount));
+			Mesh1P->SetRelativeLocation(FMath::Lerp(SheathWeaponLocation, EquippedWeaponLocation,
+			                                        EquipLerpData.LerpAmount));
+			// Call function or perform action for update
+		}
+	}
+}

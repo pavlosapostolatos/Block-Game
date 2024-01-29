@@ -28,6 +28,14 @@ class ABlockGameCharacter : public ACharacter
 	UPROPERTY(VisibleDefaultsOnly, Category=Mesh)
 	USkeletalMeshComponent* Mesh1P;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Widget, meta=(AllowPrivateAccess = "true"))
+	FVector EquippedWeaponLocation = FVector(4, -5, -161);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Widget, meta=(AllowPrivateAccess = "true"))
+	FVector SheathWeaponLocation = FVector(-26, 4, -182);
+
+	LerpData EquipLerpData;
+
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, Category=Mesh)
 	UStaticMeshComponent* BlockOutline;
@@ -71,6 +79,7 @@ class ABlockGameCharacter : public ACharacter
 
 	void SelectKey(FKey PressedKey)
 	{
+		if (EquipLerpData.bLerping) return;
 		// Do something with the pressed key
 		FString KeyName = PressedKey.GetDisplayName().ToString();
 		selectedBox = FCString::Atoi(*KeyName) - 1;
@@ -79,6 +88,7 @@ class ABlockGameCharacter : public ACharacter
 
 	void selectRight()
 	{
+		if (EquipLerpData.bLerping) return;
 		selectedBox = (selectedBox + 1) % Inventory.Num();
 		Select();
 	};
@@ -86,9 +96,12 @@ class ABlockGameCharacter : public ACharacter
 
 	void selectLeft()
 	{
+		if (EquipLerpData.bLerping) return;
 		selectedBox = (selectedBox - 1 + Inventory.Num()) % Inventory.Num();
 		Select();
 	};
+
+	void LerpWeapon(float DeltaTime);
 
 public:
 	ABlockGameCharacter();
@@ -128,6 +141,10 @@ protected:
 	void SaveGame();
 	// APawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
+	void FinishEquipWeapon();
+	void FinishUnEquipWeapon();
+	void SwitchWeapon();
+
 	// End of APawn interface
 
 public:
