@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 // #include "LerpData.generated.h"
+DECLARE_DELEGATE(FLerpFinishFunction);
 
 struct LerpData
 {
@@ -11,4 +12,5 @@ struct LerpData
 	float EndValue = 1.0f;
 	float bLerping = false;
 	int8 direction : 2 = 1;
+	FLerpFinishFunction FinishFunction;
 };
