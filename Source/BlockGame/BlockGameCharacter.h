@@ -79,7 +79,7 @@ class ABlockGameCharacter : public ACharacter
 
 	void SelectKey(FKey PressedKey)
 	{
-		if (EquipLerpData.bLerping) return;
+		// if (EquipLerpData.bLerping) return;
 		// Do something with the pressed key
 		FString KeyName = PressedKey.GetDisplayName().ToString();
 		selectedBox = FCString::Atoi(*KeyName) - 1;
@@ -88,7 +88,7 @@ class ABlockGameCharacter : public ACharacter
 
 	void selectRight()
 	{
-		if (EquipLerpData.bLerping) return;
+		// if (EquipLerpData.bLerping) return; //super lucky the finish functions do not race condition each other over Inventory[selectedBox].C_WeaponComponent 
 		selectedBox = (selectedBox + 1) % Inventory.Num();
 		Select();
 	};
@@ -96,7 +96,7 @@ class ABlockGameCharacter : public ACharacter
 
 	void selectLeft()
 	{
-		if (EquipLerpData.bLerping) return;
+		// if (EquipLerpData.bLerping) return;
 		selectedBox = (selectedBox - 1 + Inventory.Num()) % Inventory.Num();
 		Select();
 	};
