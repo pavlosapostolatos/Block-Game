@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "NiagaraFunctionLibrary.h"
 #include "Components/ArrowComponent.h"
 #include "../BlockGameCharacter.h"
 
@@ -34,7 +35,7 @@ void AGun::BeginPlay()
 // Called every frame
 void AGun::Tick(float DeltaTime)
 {
-	LastFireSeconds +=DeltaTime;
+	LastFireSeconds += DeltaTime;
 	Super::Tick(DeltaTime);
 }
 
@@ -99,7 +100,7 @@ void AGun::Fire()
 	}
 
 	// Try and fire a projectile
-	const FVector SpawnLocation = GetOwner()->GetActorLocation() + Arrow->GetRelativeLocation();
+	const FVector SpawnLocation = Arrow->GetComponentLocation();
 	if (ProjectileClass != nullptr)
 	{
 		UWorld* const World = GetWorld();
@@ -136,5 +137,16 @@ void AGun::Fire()
 		}
 	}
 
+	if (FireVFX != nullptr)
+	{
+		FFXSystemSpawnParameters FfxSystemSpawnParameters;
+		FfxSystemSpawnParameters.WorldContextObject = this;
+		FfxSystemSpawnParameters.AttachToComponent = Arrow;
+		FfxSystemSpawnParameters.SystemTemplate = FireVFX;
+		FfxSystemSpawnParameters.Location = SpawnLocation;
+		FfxSystemSpawnParameters.Rotation = Arrow->GetComponentRotation();
+
+		UNiagaraFunctionLibrary::SpawnSystemAttachedWithParams(FfxSystemSpawnParameters);
+	}
 	LastFireSeconds = 0;
 }

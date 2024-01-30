@@ -62,6 +62,9 @@ protected:
 	/** Fire Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	class UInputAction* FireAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	class UNiagaraSystem* FireVFX;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
