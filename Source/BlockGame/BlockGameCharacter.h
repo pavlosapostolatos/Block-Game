@@ -8,6 +8,7 @@
 #include "Logging/LogMacros.h"
 #include "Structs/Inventory.h"
 #include "Widgets/MainHud.h"
+#include "Gun.h"
 #include "BlockGameCharacter.generated.h"
 
 class UInputComponent;
@@ -169,7 +170,7 @@ public:
 	UStaticMesh* SM_BlockOutline;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UTP_WeaponComponent* WeaponComponent;
+	AGun* WeaponActor;
 
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/
