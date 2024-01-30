@@ -178,12 +178,11 @@ void ABlockGameCharacter::EquipWeapon()
 
 void ABlockGameCharacter::FinishEquipWeapon()
 {
-	WeaponActor = GetWorld()->SpawnActor<AGun>(Inventory[selectedBox].C_WeaponActor);
+	FActorSpawnParameters SpawnParameters;
+	SpawnParameters.Owner = this;
+	WeaponActor = GetWorld()->SpawnActor<AGun>(Inventory[selectedBox].C_WeaponActor, SpawnParameters);
 
-	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
-	WeaponActor->AttachToComponent(Mesh1P, AttachmentRules, FName(TEXT("GripPoint")));
-	SetHasRifle(true);
-	Mesh1P->SetVisibility(true);
+	WeaponActor->AttachWeapon(this);
 	// switch bHasRifle so the animation blueprint can switch to another animation set
 }
 
