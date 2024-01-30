@@ -142,14 +142,14 @@ void ABlockGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 void ABlockGameCharacter::Select()
 {
 	//BLOCK MODE TO WEAPON MODE
-	if (WeaponComponent == nullptr && Inventory[selectedBox].Type == InventoryType::WEAPON)
+	if (WeaponActor == nullptr && Inventory[selectedBox].Type == InventoryType::WEAPON)
 	{
 		EquipWeapon();
 		// EquipWeapon();
 	}
 
 	// WEAPON MODE TO BLOCK MODE
-	if (WeaponComponent != nullptr && Inventory[selectedBox].Type == InventoryType::BLOCK)
+	if (WeaponActor != nullptr && Inventory[selectedBox].Type == InventoryType::BLOCK)
 	{
 		// UnEquipWeapon();
 		EquipLerpData.direction = -1;
@@ -158,7 +158,7 @@ void ABlockGameCharacter::Select()
 	}
 
 	// WEAPON MODE TO WEAPON MODE
-	if (WeaponComponent != nullptr && Inventory[selectedBox].Type == InventoryType::WEAPON)
+	if (WeaponActor != nullptr && Inventory[selectedBox].Type == InventoryType::WEAPON)
 	{
 		EquipLerpData.direction = -1;
 		EquipLerpData.bLerping = true;
@@ -178,16 +178,19 @@ void ABlockGameCharacter::EquipWeapon()
 
 void ABlockGameCharacter::FinishEquipWeapon()
 {
-	WeaponComponent = Cast<UTP_WeaponComponent>(
-		AddComponentByClass(Inventory[selectedBox].C_WeaponComponent, false, FTransform::Identity, false));
-	WeaponComponent->AttachWeapon(this);
-	GetMesh1P()->SetVisibility(true);
+	WeaponActor = GetWorld()->SpawnActor<AGun>(Inventory[selectedBox].C_WeaponActor);
+
+	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
+	WeaponActor->AttachToComponent(Mesh1P, AttachmentRules, FName(TEXT("GripPoint")));
+	SetHasRifle(true);
+	Mesh1P->SetVisibility(true);
+	// switch bHasRifle so the animation blueprint can switch to another animation set
 }
 
 void ABlockGameCharacter::FinishUnEquipWeapon()
 {
-	WeaponComponent->DestroyComponent();
-	WeaponComponent = nullptr;
+	WeaponActor->Destroy();
+	WeaponActor = nullptr;
 	bHasRifle = false;
 	GetMesh1P()->SetVisibility(false);
 }

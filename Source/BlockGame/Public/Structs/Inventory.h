@@ -4,6 +4,7 @@
 #include "GameFramework/Actor.h"
 #include "BlockBox.h"
 #include "BlockGame/TP_WeaponComponent.h"
+#include "Gun.h" 
 #include "Inventory.generated.h"
 
 UENUM()
@@ -32,6 +33,9 @@ struct FInventory
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class UTP_WeaponComponent> C_WeaponComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class AGun> C_WeaponActor;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	uint8 Amount;
