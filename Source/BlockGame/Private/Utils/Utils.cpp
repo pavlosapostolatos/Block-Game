@@ -1,5 +1,5 @@
 ﻿#include "Utils.h"
-#include "BlockBox.h"
+#include "Boxes/BlockBox.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 bool checkBoxOverlap( const UObject* WorldContextObject, FTransform SpawnTransform)

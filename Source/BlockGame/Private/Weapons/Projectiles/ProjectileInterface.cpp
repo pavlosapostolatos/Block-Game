@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ProjectileInterface.h"
+#include "Weapons/Projectiles/ProjectileInterface.h"
 
 // Add default functionality here for any IPorjectileInterface functions that are not pure virtual.
 

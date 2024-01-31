@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "BlockBox.h"
+#include "Boxes/BlockBox.h"
 
 #include "BlockGameInstance.h"
 #include "Kismet/GameplayStatics.h"

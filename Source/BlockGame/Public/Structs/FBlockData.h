@@ -2,8 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "BlockBox.h"
-#include "Kismet/KismetSystemLibrary.h"
+#include "Boxes/BlockBox.h"
 #include "FBlockData.generated.h"
 
 USTRUCT(BlueprintType)

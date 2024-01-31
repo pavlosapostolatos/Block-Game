@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "BlockGameProjectile.h"
+#include "Weapons/Projectiles/BlockGameProjectile.h"
+
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 

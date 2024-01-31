@@ -2,9 +2,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "BlockBox.h"
-#include "BlockGame/TP_WeaponComponent.h"
-#include "Gun.h" 
+#include "Boxes/BlockBox.h"
+#include "Weapons/Gun.h" 
 #include "Inventory.generated.h"
 
 UENUM()

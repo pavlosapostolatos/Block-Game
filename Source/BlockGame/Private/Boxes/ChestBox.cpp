@@ -1,4 +1,4 @@
-﻿#include "ChestBox.h"
+﻿#include "Boxes/ChestBox.h"
 
 #include "Kismet/KismetSystemLibrary.h"
 

@@ -1,7 +1,7 @@
 ﻿// This is an empty cpp file you just created for the test,  of course, link to Unreal Engine
 
 #include "AITestsCommon.h"
-#include "BlockBoxRed.h"
+#include "Boxes/BlockBoxRed.h"
 #include "BlockGameInstance.h"
 // Unreal Automation Spec, I won't go into the naming convention area. You probably should refer to another page and test it out yourself. After all, I believe best way to learn is to practice.
 BEGIN_DEFINE_SPEC(BlockGameInstanceTest, "BlockGame.BlockGameInstanceTest",
