@@ -2,9 +2,9 @@
 
 #include "BlockGameCharacter.h"
 
-#include "BlockBoxInteractive.h"
+#include "Boxes/BlockBoxInteractive.h"
 #include "BlockGameInstance.h"
-#include "BlockBox.h"
+#include "Boxes/BlockBox.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -19,8 +19,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Utils/Utils.h"
-#include "MyHealthWidget.h"
-#include "TP_WeaponComponent.h"
+#include "Widgets/MyHealthWidget.h"
+
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 //////////////////////////////////////////////////////////////////////////

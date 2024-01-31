@@ -1,4 +1,4 @@
-﻿#include "BlockBoxMagma.h"
+﻿#include "Boxes/BlockBoxMagma.h"
 
 #include "BlockGame/BlockGameCharacter.h"
 #include "Components/BoxComponent.h"

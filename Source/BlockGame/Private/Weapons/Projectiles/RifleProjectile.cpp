@@ -1,5 +1,4 @@
-﻿#include "RifleProjectile.h"
-
+﻿#include "Weapons/Projectiles/RifleProjectile.h"
 #include "NiagaraFunctionLibrary.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"

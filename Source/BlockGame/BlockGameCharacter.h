@@ -3,12 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "TP_WeaponComponent.h"
+#include "Weapons/TP_WeaponComponent.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "Structs/Inventory.h"
 #include "Widgets/MainHud.h"
-#include "Gun.h"
 #include "BlockGameCharacter.generated.h"
 
 class UInputComponent;
