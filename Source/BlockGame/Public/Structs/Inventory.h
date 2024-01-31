@@ -28,7 +28,7 @@ struct FInventory
 	TSubclassOf<class ABlockBox> C_Box;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	InventoryType Type;
+	InventoryType Type = InventoryType::BLOCK;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class UTP_WeaponComponent> C_WeaponComponent;
@@ -37,7 +37,7 @@ struct FInventory
 	TSubclassOf<class AGun> C_WeaponActor;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	uint8 Amount;
+	uint8 Amount = 0;
 public:
 	FInventory(UTexture2D* Icon, const TSubclassOf<ABlockBox>& C_Box, InventoryType Type,
 			const TSubclassOf<UTP_WeaponComponent>& C_WeaponComponent, uint8 Amount)
