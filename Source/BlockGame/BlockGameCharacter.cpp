@@ -121,6 +121,7 @@ void ABlockGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		InputComponent->BindKey(EKeys::Five, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::SelectKey);
 		InputComponent->BindKey(EKeys::Six, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::SelectKey);
 		InputComponent->BindKey(EKeys::Seven, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::SelectKey);
+		InputComponent->BindKey(EKeys::Eight, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::SelectKey);
 		InputComponent->BindKey(EKeys::MouseScrollDown, EInputEvent::IE_Pressed, this,
 		                        &ABlockGameCharacter::selectRight);
 		InputComponent->BindKey(EKeys::MouseScrollUp, EInputEvent::IE_Pressed, this, &ABlockGameCharacter::selectLeft);

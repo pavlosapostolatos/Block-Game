@@ -103,21 +103,7 @@ void AGun::Fire()
 	const FVector SpawnLocation = Arrow->GetComponentLocation();
 	if (ProjectileClass != nullptr)
 	{
-		UWorld* const World = GetWorld();
-		if (World != nullptr)
-		{
-			APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());
-			const FRotator SpawnRotation = PlayerController->PlayerCameraManager->GetCameraRotation();
-			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-
-			//Set Spawn Collision Handling Override
-			FActorSpawnParameters ActorSpawnParams;
-			ActorSpawnParams.SpawnCollisionHandlingOverride =
-				ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-
-			// Spawn the projectile at the muzzle
-			World->SpawnActor<AProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-		}
+		SpawnProjectile(SpawnLocation);
 	}
 
 	// Try and play the sound if specified
@@ -149,4 +135,24 @@ void AGun::Fire()
 		UNiagaraFunctionLibrary::SpawnSystemAttachedWithParams(FfxSystemSpawnParameters);
 	}
 	LastFireSeconds = 0;
+}
+
+
+void AGun::SpawnProjectile(const FVector SpawnLocation)
+{
+	UWorld* const World = GetWorld();
+	if (World != nullptr)
+	{
+		APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());
+		const FRotator SpawnRotation = PlayerController->PlayerCameraManager->GetCameraRotation();
+		// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+
+		//Set Spawn Collision Handling Override
+		FActorSpawnParameters ActorSpawnParams;
+		ActorSpawnParams.SpawnCollisionHandlingOverride =
+			ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+		// Spawn the projectile at the muzzle
+		World->SpawnActor<AProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+	}
 }
