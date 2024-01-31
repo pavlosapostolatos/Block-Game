@@ -116,7 +116,7 @@ void AGun::Fire()
 				ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
 			// Spawn the projectile at the muzzle
-			World->SpawnActor<ABlockGameProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+			World->SpawnActor<ARifleProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 		}
 	}
 

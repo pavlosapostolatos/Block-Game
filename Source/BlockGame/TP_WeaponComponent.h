@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "BlockGameProjectile.h"
 #include "TP_WeaponComponent.generated.h"
 
 class ABlockGameCharacter;

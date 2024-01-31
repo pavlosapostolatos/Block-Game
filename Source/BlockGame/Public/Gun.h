@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "../BlockGameProjectile.h"
+#include "RifleProjectile.h"
 #include "Components/ArrowComponent.h"
 #include "Gun.generated.h"
 
@@ -39,7 +39,7 @@ protected:
 
 	/** Projectile class to spawn */
 	UPROPERTY(EditDefaultsOnly, Category=Projectile)
-	TSubclassOf<class ABlockGameProjectile> ProjectileClass;
+	TSubclassOf<class ARifleProjectile> ProjectileClass;
 
 	/** Sound to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
