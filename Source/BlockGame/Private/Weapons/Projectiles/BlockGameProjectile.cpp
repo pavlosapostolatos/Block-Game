@@ -10,7 +10,7 @@ ABlockGameProjectile::ABlockGameProjectile()
 	// Use a sphere as a simple collision representation
 	CollisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
 	CollisionComp->InitSphereRadius(5.0f);
-	CollisionComp->BodyInstance.SetCollisionProfileName("Projectile");
+	CollisionComp->BodyInstance.SetCollisionProfileName("Projectile");//check and edit BP for this
 	CollisionComp->OnComponentHit.AddDynamic(this, &ABlockGameProjectile::OnHit);		// set up a notification for when this component hits something blocking
 
 	// Players can't walk on it
@@ -23,8 +23,8 @@ ABlockGameProjectile::ABlockGameProjectile()
 	// Use a ProjectileMovementComponent to govern this projectile's movement
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileComp"));
 	ProjectileMovement->UpdatedComponent = CollisionComp;
-	ProjectileMovement->InitialSpeed = 10000.f;
-	ProjectileMovement->MaxSpeed = 10000.f;
+	ProjectileMovement->InitialSpeed = 3000.f;
+	ProjectileMovement->MaxSpeed = 3000.f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bShouldBounce = true;
 
@@ -42,10 +42,3 @@ void ABlockGameProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActo
 		Destroy();
 	}
 }
-
-//dont bounce
-//shpere collision?? yes
-//spawn niagara on hit
-//check block all in collision
-// collision has BP child static mesh shere with no collision
-// always destroy on hit

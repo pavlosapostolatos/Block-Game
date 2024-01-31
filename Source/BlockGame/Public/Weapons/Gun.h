@@ -69,12 +69,12 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	virtual void SpawnProjectile(FVector SpawnLocation);
 
-private:
-	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Logic, meta=(AllowPrivateAccess = "true"))
-	float FireRateSeconds = 1;
+	float FireRateSeconds = 0.5;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Logic, meta=(AllowPrivateAccess = "true"))
 	float LastFireSeconds = 0;
+	
 };
