@@ -10,7 +10,10 @@ struct FBlockData
 {
 	GENERATED_BODY()
 
-	FBlockData() = default;
+	FBlockData() :
+		  location(FVector::ZeroVector),
+		  rotation(FRotator::ZeroRotator){
+	};
 	
 	FBlockData(const TSubclassOf<class ABlockBox>& Type, const FVector3d& Location, const FRotator& Rotation)
 		: type(Type),
