@@ -17,7 +17,7 @@ class BLOCKGAME_API ABlockBoxMagma : public ABlockBox
 	UBoxComponent* CollisionBox;
 
 protected:
-	 FTimerDelegate::TMethodPtr<ABlockGameCharacter> event = &ABlockGameCharacter::Damage;
+	 FTimerDelegate::TMethodPtr<ABlockGameCharacter> Event = &ABlockGameCharacter::DamageByBox;
 	
 public:
 	// Sets default values for this actor's properties

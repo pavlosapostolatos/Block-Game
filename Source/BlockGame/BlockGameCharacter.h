@@ -119,10 +119,12 @@ public:
 	void SetHasRifle(bool bNewHasRifle);
 
 	UFUNCTION(BlueprintCallable)
-	void Heal();
+	void Heal(int heal);
+	void HealByBox(){ Heal(5);}
 
 	UFUNCTION(BlueprintCallable)
-	void Damage();
+	void Damage(int damage);
+	void DamageByBox(){ Damage(11);}
 
 	/** Getter for the bool */
 	UFUNCTION(BlueprintCallable, Category = Weapon)

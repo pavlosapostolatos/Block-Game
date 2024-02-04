@@ -16,6 +16,6 @@ public:
 
 inline ABlockBoxHeal::ABlockBoxHeal()
 {
-	event = &ABlockGameCharacter::Heal;
+	Event = &ABlockGameCharacter::HealByBox;
 }
 

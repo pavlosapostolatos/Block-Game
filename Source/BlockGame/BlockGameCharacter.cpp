@@ -371,7 +371,7 @@ void ABlockGameCharacter::SaveGame()
 	Cast<UBlockGameInstance>(UGameplayStatics::GetGameInstance(this))->SaveGame();
 }
 
-void ABlockGameCharacter::Heal()
+void ABlockGameCharacter::Heal(int heal)
 {
 	health++;
 	MainHud->GetHealthWidget()->SetHealth(health);
@@ -379,9 +379,9 @@ void ABlockGameCharacter::Heal()
 	UKismetSystemLibrary::PrintString(this, "health: " + FString::FromInt(health));
 };
 
-void ABlockGameCharacter::Damage()
+void ABlockGameCharacter::Damage(int damage)
 {
-	health -= 11;
+	health -= damage;
 	if (health <= 0)
 	{
 		DisableInput(UGameplayStatics::GetPlayerController(this, 0));
