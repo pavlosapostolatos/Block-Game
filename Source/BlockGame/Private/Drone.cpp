@@ -5,6 +5,7 @@
 
 #include "NiagaraFunctionLibrary.h"
 #include "BlockGame/BlockGameCharacter.h"
+#include "BlockGame/BlockGameGameMode.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -87,6 +88,8 @@ void ADrone::Destruct(float DeltaTime)
 		{
 			DestroyData.LerpAmount = DestroyData.EndValue;
 			DestroyData.bLerping = false;
+			
+			Cast<ABlockGameGameMode>(UGameplayStatics::GetGameMode(this))->DroneDeathListener();
 			Destroy();
 			// Call function or perform action for finish
 		}
@@ -94,7 +97,6 @@ void ADrone::Destruct(float DeltaTime)
 		{
 			float Alpha = FMath::Clamp(DestroyData.LerpTimer / DestroyData.LerpDuration, 0.0f, 1.0f);
 			DestroyData.LerpAmount = FMath::Lerp(DestroyData.StartValue, DestroyData.EndValue, Alpha);
-			UKismetSystemLibrary::PrintString(this, FString::SanitizeFloat(DestroyData.LerpAmount));
 			UpdateMaterialDestruction(DestroyData.LerpAmount);
 			// Call function or perform action for update
 		}
@@ -123,7 +125,8 @@ void ADrone::OnOverlap(
 	Character->Damage(25);
 
 	UGameplayStatics::SpawnEmitterAtLocation(this, ExplosionParticles, GetCapsuleComponent()->GetComponentLocation(), FRotator::ZeroRotator, FVector::One(), true, EPSCPoolMethod::None, true);
-	UGameplayStatics::PlaySoundAtLocation(this, ExplosionSound, GetCapsuleComponent()->GetComponentLocation());
+	UGameplayStatics::PlaySoundAtLocation(this, ExplosionSound, GetCapsuleComponent()->GetComponentLocation() , 0.25f);
 
+	Cast<ABlockGameGameMode>(UGameplayStatics::GetGameMode(this))->DroneDeathListener();
 	Destroy();
 }
