@@ -188,4 +188,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void DeleteBox();
+
+	UFUNCTION()
+	UMyMainHud* GetMainHud() const
+	{
+		return MainHud;
+	}
 };

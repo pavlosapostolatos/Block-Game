@@ -8,6 +8,8 @@
 #include "Structs/LerpData.h"
 #include "Drone.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDroneDeathDelegate);
+
 UCLASS()
 class BLOCKGAME_API ADrone : public ACharacter
 {
@@ -30,7 +32,10 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
 	USoundBase* ExplosionSound;
-	
+
+	UPROPERTY(BlueprintAssignable, Category = "MyEvents")
+	FDroneDeathDelegate DeathDelegate;
+
 	UFUNCTION(BlueprintCallable)
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse,
 	           const FHitResult& Hit);
@@ -46,11 +51,18 @@ protected:
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:
 	// Sets default values for this character's properties
 	ADrone();
 
+	UFUNCTION()
+	FDroneDeathDelegate& GetDeathDelegate()
+	{
+		return DeathDelegate;
+	}
+	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

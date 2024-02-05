@@ -32,5 +32,6 @@ protected:
 public:
 	ABlockGameGameMode();
 
+	UFUNCTION()
 	void DroneDeathListener();
 };

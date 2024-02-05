@@ -3,13 +3,10 @@
 
 #include "Drone.h"
 
-#include "NiagaraFunctionLibrary.h"
 #include "BlockGame/BlockGameCharacter.h"
-#include "BlockGame/BlockGameGameMode.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "Kismet/KismetSystemLibrary.h"
 #include "Weapons/Projectiles/Projectile.h"
 
 // Sets default values
@@ -88,8 +85,7 @@ void ADrone::Destruct(float DeltaTime)
 		{
 			DestroyData.LerpAmount = DestroyData.EndValue;
 			DestroyData.bLerping = false;
-			
-			Cast<ABlockGameGameMode>(UGameplayStatics::GetGameMode(this))->DroneDeathListener();
+
 			Destroy();
 			// Call function or perform action for finish
 		}
@@ -124,9 +120,19 @@ void ADrone::OnOverlap(
 
 	Character->Damage(25);
 
-	UGameplayStatics::SpawnEmitterAtLocation(this, ExplosionParticles, GetCapsuleComponent()->GetComponentLocation(), FRotator::ZeroRotator, FVector::One(), true, EPSCPoolMethod::None, true);
-	UGameplayStatics::PlaySoundAtLocation(this, ExplosionSound, GetCapsuleComponent()->GetComponentLocation() , 0.25f);
+	UGameplayStatics::SpawnEmitterAtLocation(this, ExplosionParticles, GetCapsuleComponent()->GetComponentLocation(),
+	                                         FRotator::ZeroRotator, FVector::One(), true, EPSCPoolMethod::None, true);
+	UGameplayStatics::PlaySoundAtLocation(this, ExplosionSound, GetCapsuleComponent()->GetComponentLocation(), 0.25f);
 
-	Cast<ABlockGameGameMode>(UGameplayStatics::GetGameMode(this))->DroneDeathListener();
 	Destroy();
+}
+
+
+void ADrone::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	if (EndPlayReason == EEndPlayReason::Quit || EndPlayReason == EEndPlayReason::EndPlayInEditor)
+		return;
+	Super::EndPlay(EndPlayReason);
+	DeathDelegate.Broadcast();
+	// Cast<ABlockGameGameMode>(UGameplayStatics::GetGameMode(this))->DroneDeathListener();
 }

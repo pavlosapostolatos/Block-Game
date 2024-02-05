@@ -34,24 +34,24 @@ void ABlockGameGameMode::StartWave()
 {
 	Wave++;
 
-	UKismetSystemLibrary::PrintString(this, " Starting Wave: " + FString::SanitizeFloat(Wave));
-	
+	UKismetSystemLibrary::PrintString(this, " Starting Wave: " + FString::FromInt(Wave));
+
 	EnemiesPerWave += 4 + sqrt(Wave);
 
 	for (int i = 0; i < EnemiesPerWave; ++i)
 	{
-		DroneSpawners[rand() % DroneSpawners.Num()]->SpawnDrone();
+		ADrone* Drone = DroneSpawners[rand() % DroneSpawners.Num()]->SpawnDrone();
+		Drone->GetDeathDelegate().AddDynamic(this, &ABlockGameGameMode::DroneDeathListener);
 	}
 
 	EnemiesAlive = EnemiesPerWave;
+	Cast<ABlockGameCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0))->GetMainHud()->SetWave(Wave);
 }
 
 void ABlockGameGameMode::DroneDeathListener()
 {
-
-	if(--EnemiesAlive <= 0)
+	if (--EnemiesAlive <= 0)
 	{
 		StartWave();
 	}
 }
-

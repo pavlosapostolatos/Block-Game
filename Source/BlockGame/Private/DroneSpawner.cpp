@@ -3,7 +3,6 @@
 
 #include "DroneSpawner.h"
 
-#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
 
@@ -29,7 +28,7 @@ void ADroneSpawner::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void ADroneSpawner::SpawnDrone() const
+ADrone* ADroneSpawner::SpawnDrone() const
 {
 	const FVector Location = SpawnBox->GetComponentLocation();
 	const FVector Extent = SpawnBox->GetScaledBoxExtent();
@@ -38,6 +37,5 @@ void ADroneSpawner::SpawnDrone() const
 
 	FActorSpawnParameters Parameters;
 	Parameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-	GetWorld()->SpawnActor<ADrone>(DroneClass, UE::Math::TTransform(SpawnLocation), Parameters);
-
+	return GetWorld()->SpawnActor<ADrone>(DroneClass, UE::Math::TTransform(SpawnLocation), Parameters);
 }

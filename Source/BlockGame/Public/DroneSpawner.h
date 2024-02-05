@@ -31,5 +31,5 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(Blueprintable)
-	void SpawnDrone() const;
+	ADrone* SpawnDrone() const;
 };
