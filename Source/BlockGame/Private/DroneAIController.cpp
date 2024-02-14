@@ -12,6 +12,7 @@ void ADroneAIController::BeginPlay()
 {
 	Super::BeginPlay();
 	DronePawn = Cast<ADrone>(GetInstigator());
+	RunBehaviorTree(BTAsset);
 }
 
 void ADroneAIController::Tick(float DeltaTime)

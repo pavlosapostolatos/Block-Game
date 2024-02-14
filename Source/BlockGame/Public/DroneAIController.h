@@ -14,15 +14,17 @@ UCLASS()
 class BLOCKGAME_API ADroneAIController : public AAIController
 {
 	GENERATED_BODY()
-	
-protected:
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UBehaviorTree* BTAsset;
+
+protected:
+	
 	UPROPERTY(BlueprintReadWrite)
 	ADrone* DronePawn;
 
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
-	
-	
+public:
 };
