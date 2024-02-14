@@ -7,11 +7,9 @@
 #include "Kismet/KismetSystemLibrary.h"
 
 
-void UBTT_GetRandomPointInAir::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)//TODO maybe use execute
+EBTNodeResult::Type UBTT_GetRandomPointInAir::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
-	
-	ACharacter* Drone = Cast<ACharacter>(OwnerComp.GetOwner());//TODO maybe this is the controller
+	APawn* Drone = Cast<AController>(OwnerComp.GetOwner())->GetPawn();
 	FVector PotentialLocation;
 	do
 	{
@@ -23,10 +21,12 @@ void UBTT_GetRandomPointInAir::TickTask(UBehaviorTreeComponent& OwnerComp, uint8
 	while (TraceDroneMovementCollision(Drone, PotentialLocation));
 	
 	OwnerComp.GetBlackboardComponent()->SetValueAsVector("MoveToLocationInAir" ,PotentialLocation);
-    FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+	FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+
+	return Super::ExecuteTask(OwnerComp, NodeMemory);//SUCCESS
 }
 
-bool UBTT_GetRandomPointInAir::TraceDroneMovementCollision(ACharacter* Drone, const FVector& PotentialLocation) const
+bool UBTT_GetRandomPointInAir::TraceDroneMovementCollision(AActor* Drone, const FVector& PotentialLocation) const
 {
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
 	ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECC_WorldStatic)); // Add WorldStatic objects
