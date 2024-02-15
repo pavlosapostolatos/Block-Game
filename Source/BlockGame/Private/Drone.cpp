@@ -23,6 +23,8 @@ ADrone::ADrone()
 	OverlapComp = CreateDefaultSubobject<USphereComponent>(TEXT("OverlapComp"));
 	OverlapComp->SetupAttachment(GetMesh());
 	OverlapComp->OnComponentBeginOverlap.AddDynamic(this, &ADrone::OnOverlap);
+
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 	// set up a notification for when this component hits something blocking
 }
 

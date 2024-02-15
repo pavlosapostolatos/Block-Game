@@ -12,16 +12,19 @@ EBTNodeResult::Type UBTT_MoveDrone::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 	FVector TargetLocation = OwnerComp.GetBlackboardComponent()->GetValueAsVector("MoveToLocationInAir");
 
 	ACharacter* Drone = Cast<ACharacter>(Cast<AController>(OwnerComp.GetOwner())->GetPawn());
-	
-	FVector DroneLocation = Drone->GetActorLocation();
 
-	if (UKismetMathLibrary::EqualEqual_VectorVector(DroneLocation, TargetLocation, 10))
+	const FVector DronePosition = Drone->GetActorLocation();
+	const FRotator StartRotation = Drone->GetActorRotation();
+	const FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(DronePosition, TargetLocation);
+	Drone->SetActorRotation(FMath::Lerp(StartRotation, TargetRotation, 0.025));
+	
+	if (UKismetMathLibrary::EqualEqual_VectorVector(DronePosition, TargetLocation, 10))
 	{
 		Drone->GetCharacterMovement()->Velocity = FVector::Zero();
 	}
 	else
 	{
-		FVector Velocity = TargetLocation - DroneLocation;
+		FVector Velocity = TargetLocation - DronePosition;
 		Velocity.Normalize();
 		Velocity *= Speed;
 		Drone->GetCharacterMovement()->Velocity = Velocity;

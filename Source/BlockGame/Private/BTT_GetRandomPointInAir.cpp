@@ -11,6 +11,7 @@ EBTNodeResult::Type UBTT_GetRandomPointInAir::ExecuteTask(UBehaviorTreeComponent
 {
 	APawn* Drone = Cast<AController>(OwnerComp.GetOwner())->GetPawn();
 	FVector PotentialLocation;
+	int i = 0;
 	do
 	{
 		auto UnitVector = UKismetMathLibrary::RandomUnitVector();
@@ -18,12 +19,12 @@ EBTNodeResult::Type UBTT_GetRandomPointInAir::ExecuteTask(UBehaviorTreeComponent
 		PotentialLocation = Scale * UnitVector + Drone->GetActorLocation();
 		DrawDebugSphere(GetWorld(), PotentialLocation, 10, 12, FLinearColor::Red.ToFColor(false), false, 10);
 	}
-	while (TraceDroneMovementCollision(Drone, PotentialLocation));
-	
-	OwnerComp.GetBlackboardComponent()->SetValueAsVector("MoveToLocationInAir" ,PotentialLocation);
+	while (TraceDroneMovementCollision(Drone, PotentialLocation) && ++i != 100);//if you get the drone stuck like a good gamer it will take revenge by making your pc hit 100% ram in 5 seconds
+
+	OwnerComp.GetBlackboardComponent()->SetValueAsVector("MoveToLocationInAir", PotentialLocation);
 	FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 
-	return Super::ExecuteTask(OwnerComp, NodeMemory);//SUCCESS
+	return Super::ExecuteTask(OwnerComp, NodeMemory); //SUCCESS
 }
 
 bool UBTT_GetRandomPointInAir::TraceDroneMovementCollision(AActor* Drone, const FVector& PotentialLocation) const

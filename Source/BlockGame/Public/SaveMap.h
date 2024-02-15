@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class BLOCKGAME_API ASaveMap : public ALevelScriptActor
+class BLOCKGAME_API ASaveMap : public ALevelScriptActor //Assign at open level blueprint
 {
 	GENERATED_BODY()
 
