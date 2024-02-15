@@ -23,8 +23,11 @@ EBTNodeResult::Type UBTT_MoveDrone::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 	{
 		FVector Velocity = TargetLocation - DroneLocation;
 		Velocity.Normalize();
-		Velocity *= 200;
+		Velocity *= Speed;
 		Drone->GetCharacterMovement()->Velocity = Velocity;
+		Drone->GetCharacterMovement()->GroundFriction = 0.0f;
+		Drone->GetCharacterMovement()->BrakingFrictionFactor = 0.0f;
+		Drone->GetCharacterMovement()->bUseSeparateBrakingFriction = false;
 	}
 	FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	return Super::ExecuteTask(OwnerComp, NodeMemory);

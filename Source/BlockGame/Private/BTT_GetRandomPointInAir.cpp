@@ -14,7 +14,7 @@ EBTNodeResult::Type UBTT_GetRandomPointInAir::ExecuteTask(UBehaviorTreeComponent
 	do
 	{
 		auto UnitVector = UKismetMathLibrary::RandomUnitVector();
-		float Scale = UKismetMathLibrary::RandomFloatInRange(300, 500);
+		float Scale = UKismetMathLibrary::RandomFloatInRange(MinDistance, MaxDistance);
 		PotentialLocation = Scale * UnitVector + Drone->GetActorLocation();
 		DrawDebugSphere(GetWorld(), PotentialLocation, 10, 12, FLinearColor::Red.ToFColor(false), false, 10);
 	}
