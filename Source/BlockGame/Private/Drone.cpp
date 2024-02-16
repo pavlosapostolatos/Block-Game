@@ -132,7 +132,7 @@ void ADrone::OnOverlap(
 
 void ADrone::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	if (EndPlayReason == EEndPlayReason::Quit || EndPlayReason == EEndPlayReason::EndPlayInEditor)
+	if (EndPlayReason == EEndPlayReason::Quit || EndPlayReason == EEndPlayReason::EndPlayInEditor || EndPlayReason == EEndPlayReason::LevelTransition)
 		return;
 	Super::EndPlay(EndPlayReason);
 	DeathDelegate.Broadcast();
