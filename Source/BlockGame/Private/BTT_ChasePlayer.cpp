@@ -10,16 +10,11 @@
 UBTT_ChasePlayer::UBTT_ChasePlayer()
 {
 	bNotifyTick = 1;
-	bNotifyTaskFinished = 1;
-	Drone = nullptr;
+	// bNotifyTaskFinished = 1;
 }
 
 EBTNodeResult::Type UBTT_ChasePlayer::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	Drone = Cast<ACharacter>(Cast<AController>(OwnerComp.GetOwner())->GetPawn());
-	OwnerCompField = &OwnerComp;//super dodgy. cannot do it like UBTTask_BlueprintBase::FinishExecute
-
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, CheckStuckEvent, 5, true);
 
 	return EBTNodeResult::Type::InProgress;// will keep it ticking
 }
@@ -27,6 +22,8 @@ EBTNodeResult::Type UBTT_ChasePlayer::ExecuteTask(UBehaviorTreeComponent& OwnerC
 void UBTT_ChasePlayer::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
 	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
+
+	ACharacter* Drone = Cast<ACharacter>(Cast<AController>(OwnerComp.GetOwner())->GetPawn());
 
 	const FVector TargetLocation = UGameplayStatics::GetPlayerCharacter(this, 0)->GetActorLocation();
 	
@@ -51,22 +48,4 @@ void UBTT_ChasePlayer::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMe
 		// Drone->GetCharacterMovement()->BrakingFrictionFactor = 0.0f;
 		// Drone->GetCharacterMovement()->bUseSeparateBrakingFriction = false;
 	}
-}
-
-void UBTT_ChasePlayer::CheckStuck()
-{
-
-	const FVector CurrentPosition = Drone->GetActorLocation();
-	if(UKismetMathLibrary::EqualEqual_VectorVector(CurrentPosition, PrevPosition, 100))
-	{
-		FinishLatentTask(*OwnerCompField, EBTNodeResult::Failed);
-	}
-	PrevPosition = CurrentPosition;
-}
-
-void UBTT_ChasePlayer::OnTaskFinished(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory,
-	EBTNodeResult::Type TaskResult)
-{
-	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
-	Super::OnTaskFinished(OwnerComp, NodeMemory, TaskResult);
 }
